@@ -29,7 +29,7 @@ module.exports = (app) => {
                 // recommended you use this setting in production if you have a well-known domain you want to restrict the cookies to.
                 // domain: 'your.domain.com',
                 // recommended you use this setting in production if your site is published using HTTPS
-                // secure: true,
+                secure: true,
             },
         })
     );

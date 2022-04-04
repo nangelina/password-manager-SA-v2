@@ -5,8 +5,17 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
+
+const https = require('https');
+const fs = require('fs');
+const tlsConfig = {
+    key: fs.readFileSync('certs/localhost-key.pem'),
+    cert: fs.readFileSync('certs/localhost.pem'),
+};
+
 const app = express();
+
 
 // let's set up some basic middleware for our express app
 // logs requests to the console. not necessary to make passport work, but useful
@@ -44,9 +53,12 @@ app.use((error, req, res, next) => {
 require('./middleware/mongoose')()
     .then(() => {
         // mongo is connected, so now we can start the express server.
-        app.listen(PORT, () =>
-            console.log(`Server up and running on ${PORT}.`)
-        );
+        // app.listen(PORT, () =>
+        //     console.log(`Server up and running on ${PORT}.`)
+        // );
+        https.createServer(tlsConfig, app).listen({ port: PORT }, () => {
+            console.log(`Server up and running on ${PORT}.`);
+        });
     })
     .catch((err) => {
         // an error occurred connecting to mongo!
