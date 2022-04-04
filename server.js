@@ -1,6 +1,9 @@
-const express = require("express");
+const express = require('express');
 const bodyparser = require('body-parser');
 const morgan = require('morgan');
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -14,8 +17,8 @@ app.use(bodyparser.urlencoded({ extended: true }));
 app.use(bodyparser.json());
 
 // Serve up static assets (usually on heroku)
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
 }
 
 // configure using our exported passport function.
@@ -31,21 +34,23 @@ app.use(require('./routes'));
 // that logs the error to console, then renders an
 // error page describing the error.
 app.use((error, req, res, next) => {
-  console.error(error);
-  res.json({
-    error
-  })
+    console.error(error);
+    res.json({
+        error,
+    });
 });
 
 // configure mongoose
-require('../shared/middleware/mongoose')()
-  .then(() => {
-    // mongo is connected, so now we can start the express server.
-    app.listen(PORT, () => console.log(`Server up and running on ${PORT}.`));
-  })
-  .catch(err => {
-    // an error occurred connecting to mongo!
-    // log the error and exit
-    console.error('Unable to connect to mongo.')
-    console.error(err);
-  });
+require('./middleware/mongoose')()
+    .then(() => {
+        // mongo is connected, so now we can start the express server.
+        app.listen(PORT, () =>
+            console.log(`Server up and running on ${PORT}.`)
+        );
+    })
+    .catch((err) => {
+        // an error occurred connecting to mongo!
+        // log the error and exit
+        console.error('Unable to connect to mongo.');
+        console.error(err);
+    });
