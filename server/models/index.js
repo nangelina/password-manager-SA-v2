@@ -1,4 +1,3 @@
 module.exports = {
-  User: require('./User'),
-  SocialMediaMembership: require('./SocialMediaMembership')
+    User: require('./User'),
 };
