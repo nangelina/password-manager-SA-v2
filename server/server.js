@@ -53,9 +53,6 @@ app.use((error, req, res, next) => {
 require('./middleware/mongoose')()
     .then(() => {
         // mongo is connected, so now we can start the express server.
-        // app.listen(PORT, () =>
-        //     console.log(`Server up and running on ${PORT}.`)
-        // );
         https.createServer(tlsConfig, app).listen({ port: PORT }, () => {
             console.log(`Server up and running on ${PORT}.`);
         });
