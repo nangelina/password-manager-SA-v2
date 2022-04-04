@@ -2,19 +2,32 @@
     "name": "mern",
     "version": "0.1.0",
     "private": true,
+    "proxy": "https://localhost:8080/",
     "dependencies": {
-        "axios": "^0.18.0",
+        "axios": "^0.26.1",
         "material-ui": "^0.20.0",
-        "react": "^16.0.0",
-        "react-dom": "^16.0.0",
+        "react": "^16.14.0",
+        "react-dom": "^16.14.0",
         "react-flexbox-grid": "^2.0.0",
         "react-router-dom": "^4.2.2",
-        "react-scripts": "1.0.14"
+        "react-scripts": "^5.0.0"
     },
     "scripts": {
-        "start": "set HTTPS=true&&react-scripts start",
+        "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test --env=jsdom",
         "eject": "react-scripts eject"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
     }
 }
