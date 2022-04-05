@@ -47,7 +47,6 @@ const styles = {
 };
 
 function Crypto () {
-
   // data
 
   const [email, setEmail] = useState('user@example.com');
@@ -56,7 +55,9 @@ function Crypto () {
 
   const [masterKey, setMasterKey] = useState(new ByteData());
   const [masterKeyHash, setMasterKeyHash] = useState(new ByteData());
-  const [stretchedMasterKey, setStretchedMasterKey] = useState(new SymmetricCryptoKey());
+  const [stretchedMasterKey, setStretchedMasterKey] = useState(
+    new SymmetricCryptoKey()
+  );
 
   const [symKey, setSymKey] = useState(new SymmetricCryptoKey());
   const [encryptedSymKey, setEncryptedSymKey] = useState(new Cipher());
@@ -64,8 +65,12 @@ function Crypto () {
 
   const [publicKey, setPublicKey] = useState(new ByteData());
   const [privateKey, setPrivateKey] = useState(new ByteData());
-  const [encryptedPrivateKey, setEncryptedPrivateKey] = useState(new Cipher());
-  const [decryptedPrivateKey, setDecryptedPrivateKey] = useState(new ByteData());
+  const [encryptedPrivateKey, setEncryptedPrivateKey] = useState(
+    new Cipher()
+  );
+  const [decryptedPrivateKey, setDecryptedPrivateKey] = useState(
+    new ByteData()
+  );
 
   const [secret, setSecret] = useState('This is a secret.');
   const [encryptedSecret, setEncryptedSecret] = useState(new Cipher());

@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 
 import { UserContext } from './services/userContext';
+import PrivateRoute from './services/PrivateRoute'
 
 import CreateAccountPage from './pages/CreateAccountPage';
 import HomePage from './pages/HomePage';
@@ -61,7 +62,7 @@ function App () {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/create" element={<CreateAccountPage />} />
-          <Route path="/cryptography-demo" element={<Crypto />} />
+          <Route path="/cryptography-demo" element={<PrivateRoute><Crypto /></PrivateRoute>} />
           <Route element={<NotFoundPage />} />
         </Routes>
       </ThemeProvider>
