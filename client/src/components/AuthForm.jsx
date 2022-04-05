@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import FormItem from './FormItem.jsx';
 import PasswordItem from './PasswordItem.jsx';
 import { UserContext } from '../services/userContext';
+import { generateMasterKey, stretchMasterKey, generateMasterKeyHash, generateSymKey, encryptSymKey, decryptSymKey, jsonToSymKeyCipher } from '../crypto/cryptoAppHelpers';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -42,12 +43,31 @@ function AuthForm ({ isRegister }) {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const masterKey = await generateMasterKey(username, password);
+    const masterPasswordHash = await generateMasterKeyHash(masterKey);
+
     if (isRegister) {
+      const stretchedMasterKey = await stretchMasterKey(masterKey);
+      const unencryptedSymKey = generateSymKey();
+      const encryptedSymKey = await encryptSymKey(unencryptedSymKey, stretchedMasterKey);
+
+      // console.log('encryptedSymKey', encryptedSymKey);
+      // const jsonstring = encryptedSymKey.string;
+      // const jsonparse = jsonToSymKeyCipher(jsonstring);
+      // console.log('jsonparse', jsonparse);
+      // const decryptedSymKey = await decryptSymKey(jsonparse, stretchedMasterKey);
+      // console.log('original sym key:', unencryptedSymKey, '\nfrom json and back:', decryptedSymKey);
+      // console.log('same?', unencryptedSymKey === decryptedSymKey, unencryptedSymKey == decryptedSymKey);
+
       axios
-        .post('/api/users', { username, password })
+        .post('/api/users', {
+          username,
+          password: masterPasswordHash.b64,
+          // symKey: encryptedSymKey.string
+        })
         .then((user) => {
           // if the response is successful, make them log in
           navigate('/login');
@@ -59,7 +79,7 @@ function AuthForm ({ isRegister }) {
       axios
         .post('/api/auth', {
           username,
-          password,
+          password: masterPasswordHash.b64,
         })
         .then((user) => {
           // if the response is successful, update the current user and redirect to the home page
@@ -84,27 +104,51 @@ function AuthForm ({ isRegister }) {
       <Grid>
         <Card className="form-container">
           <CardContent>
-            {!isRegister
-              && <Typography gutterBottom variant="h5">
-                Don't have an account yet? {<Link to="/register">Register</Link>} one first!
+            {!isRegister && (
+              <Typography gutterBottom variant="h5">
+                Don't have an account yet?{' '}
+                {<Link to="/register">Register</Link>} one
+                first!
               </Typography>
-            }
+            )}
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <FormItem label="Username" onChange={handleUsernameChange} />
+                  <FormItem
+                    label="Username"
+                    onChange={handleUsernameChange}
+                  />
                 </Grid>
                 <Grid item xs={12}>
-                  <PasswordItem label="Password" onChange={handlePWChange} onBlur={validatePW} isError={Boolean(error)} />
+                  <PasswordItem
+                    label="Password"
+                    onChange={handlePWChange}
+                    onBlur={validatePW}
+                    isError={Boolean(error)}
+                  />
                 </Grid>
-                {isRegister
-                  && <Grid item xs={12}>
-                    <PasswordItem label="Confirm Password" onChange={handleConfirmPWChange} isError={Boolean(error)} onBlur={validatePW} />
+                {isRegister && (
+                  <Grid item xs={12}>
+                    <PasswordItem
+                      label="Confirm Password"
+                      onChange={handleConfirmPWChange}
+                      isError={Boolean(error)}
+                      onBlur={validatePW}
+                    />
                   </Grid>
-                }
-                {error && <Grid item xs={12} style={{ color: 'red' }}>{error}</Grid>}
+                )}
+                {error && (
+                  <Grid item xs={12} style={{ color: 'red' }}>
+                    {error}
+                  </Grid>
+                )}
                 <Grid item xs={12}>
-                  <Button type="submit" variant="contained" color="primary" fullWidth>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                  >
                     {isRegister ? 'Sign Up' : 'Sign In'}
                   </Button>
                 </Grid>

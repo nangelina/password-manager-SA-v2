@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 import { UserContext } from '../services/userContext';
 
@@ -9,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function LoggedInMenu ({ username, ...otherProps }) {
+  const navigate = useNavigate()
   const { setUser } = useContext(UserContext);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -54,7 +56,14 @@ function LoggedInMenu ({ username, ...otherProps }) {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>{username}</MenuItem>
+        <MenuItem onClick={() => {
+          navigate('/');
+          handleClose();
+        }}>My Passwords</MenuItem>
+        <MenuItem onClick={() => {
+          navigate('/cryptography-demo');
+          handleClose();
+        }}>Cryptography Demo</MenuItem>
         <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
       </Menu>
     </div>
