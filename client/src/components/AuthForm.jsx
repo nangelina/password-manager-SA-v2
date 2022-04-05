@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
+import { Link, useNavigate } from 'react-router-dom';
+
 import FormItem from './FormItem.jsx';
 import PasswordItem from './PasswordItem.jsx';
-import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../services/userContext';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -12,14 +15,15 @@ import Typography from '@mui/material/Typography';
 
 function AuthForm ({ isRegister }) {
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
-  const [email, setEmail] = React.useState('');
+  const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
-  const [error, setError] = React.useState(false);
+  const [error, setError] = React.useState('');
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
   };
   const handlePWChange = (event) => {
     setPassword(event.target.value);
@@ -31,8 +35,7 @@ function AuthForm ({ isRegister }) {
   const validatePW = () => {
     if (password !== '' && confirmPassword !== '') {
       if (password !== confirmPassword) {
-        setError(true);
-        alert('Passwords must match.');
+        setError('Passwords must match.');
       } else {
         setError(false);
       }
@@ -42,26 +45,35 @@ function AuthForm ({ isRegister }) {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    axios
-      .post('/api/users', { username: email, password })
-      .then((user) => {
-        // if the response is successful, make them log in
-        if (isRegister) {
+    if (isRegister) {
+      axios
+        .post('/api/users', { username, password })
+        .then((user) => {
+          // if the response is successful, make them log in
           navigate('/login');
-        } else {
+        })
+        .catch((err) => {
+          setError(err.response.data.message || err.message);
+        });
+    } else {
+      axios
+        .post('/api/auth', {
+          username,
+          password,
+        })
+        .then((user) => {
+          // if the response is successful, update the current user and redirect to the home page
           setUser(user.data);
           navigate('/');
-        }
-      })
-      .catch((err) => {
-        setError(
-          isRegister
-            ? (err.response.data.message || err.message)
-            : (err.response.status === 401
+        })
+        .catch((err) => {
+          setError(
+            err.response.status === 401
               ? 'Invalid username or password.'
-              : err.message)
-        );
-      });
+              : err.message
+          );
+        });
+    }
   };
 
   return (
@@ -80,17 +92,17 @@ function AuthForm ({ isRegister }) {
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <FormItem label="Email" type="email" onChange={handleEmailChange} />
+                  <FormItem label="Username" onChange={handleUsernameChange} />
                 </Grid>
                 <Grid item xs={12}>
-                  <PasswordItem label="Password" onChange={handlePWChange} onBlur={validatePW} isError={error} />
+                  <PasswordItem label="Password" onChange={handlePWChange} onBlur={validatePW} isError={Boolean(error)} />
                 </Grid>
                 {isRegister
-                  ? <Grid item xs={12}>
-                    <PasswordItem label="Confirm Password" onChange={handleConfirmPWChange} isError={error} onBlur={validatePW} />
+                  && <Grid item xs={12}>
+                    <PasswordItem label="Confirm Password" onChange={handleConfirmPWChange} isError={Boolean(error)} onBlur={validatePW} />
                   </Grid>
-                  : <></>
                 }
+                {error && <Grid item xs={12} style={{ color: 'red' }}>{error}</Grid>}
                 <Grid item xs={12}>
                   <Button type="submit" variant="contained" color="primary" fullWidth>
                     {isRegister ? 'Sign Up' : 'Sign In'}
