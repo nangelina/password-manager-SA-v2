@@ -18,15 +18,15 @@ import {
   createTheme,
   responsiveFontSizes,
 } from '@mui/material/styles';
-import { green, purple } from '@mui/material/colors';
+import { green, common } from '@mui/material/colors';
 
 let theme = createTheme({
   palette: {
     primary: {
-      main: purple[500],
+      main: green[500],
     },
     secondary: {
-      main: green[500],
+      main: common.black,
     },
   },
 });
@@ -61,7 +61,7 @@ function App () {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/create" element={<CreateAccountPage />} />
+          <Route path="/register" element={<CreateAccountPage />} />
           <Route path="/cryptography-demo" element={<PrivateRoute><Crypto /></PrivateRoute>} />
           <Route element={<NotFoundPage />} />
         </Routes>

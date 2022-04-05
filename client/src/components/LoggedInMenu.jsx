@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import axios from 'axios';
+
+import { UserContext } from '../services/userContext';
+
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const LoginMenu = (props) => {
-  const { onLogOut, username, ...otherProps } = props;
+function LoggedInMenu ({ username, ...otherProps }) {
+  const { setUser } = useContext(UserContext);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -14,6 +18,19 @@ const LoginMenu = (props) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogOut = () => {
+    axios
+      .delete('/api/auth')
+      .then(() => {
+        // unsets the currently logged in user
+        setUser(null);
+      })
+      .catch((err) => {
+        console.log(err);
+        handleClose();
+      });
   };
 
   return (
@@ -38,10 +55,10 @@ const LoginMenu = (props) => {
         }}
       >
         <MenuItem onClick={handleClose}>{username}</MenuItem>
-        <MenuItem onClick={onLogOut}>Log Out</MenuItem>
+        <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
       </Menu>
     </div>
   );
 };
 
-export default LoginMenu;
+export default LoggedInMenu;
