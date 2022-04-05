@@ -15,14 +15,22 @@ const bcrypt = require('bcrypt');
 const WORK_FACTOR = 10;
 
 const UserSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-    index: { unique: true }
-  },
-  password: {
-    type: String
-  }
+    username: {
+        type: String,
+        required: true,
+        index: { unique: true }
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    symKey: {
+        type: String,
+        required: true,
+    },
+    vault: {
+        type: String
+    }
 });
 
 // This pre "save" handler will be called before each time the user is saved.
@@ -34,28 +42,28 @@ const UserSchema = new Schema({
 // but arrow functions preserve "this" as the bound context
 // if you use an arrow function, you'll get an error
 // "user.isModified is not a function"
-UserSchema.pre('save', function(next) {
-  const user = this;
+UserSchema.pre('save', function (next) {
+    const user = this;
 
-  // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) {
-    return next();
-  }
+    // only hash the password if it has been modified (or is new)
+    if (!user.isModified('password')) {
+        return next();
+    }
 
-  // generate a salt
-  bcrypt.genSalt(WORK_FACTOR, function (err, salt) {
-    if (err) return next(err);
+    // generate a salt
+    bcrypt.genSalt(WORK_FACTOR, function (err, salt) {
+        if (err) return next(err);
 
-    // hash the password along with our new salt
-    bcrypt.hash(user.password, salt, function (err, hash) {
-      if (err) return next(err);
+        // hash the password along with our new salt
+        bcrypt.hash(user.password, salt, function (err, hash) {
+            if (err) return next(err);
 
-      // override the cleartext password with the hashed one
-      user.password = hash;
-      // let mongoose know we're done now that we've hashed the plaintext password
-      next();
+            // override the cleartext password with the hashed one
+            user.password = hash;
+            // let mongoose know we're done now that we've hashed the plaintext password
+            next();
+        });
     });
-  });
 });
 
 // Here, we define a method that will be available on each instance of the User.
@@ -63,12 +71,12 @@ UserSchema.pre('save', function(next) {
 // true if the password is a match, or false if it is not.
 // This code returns a Promise rather than using the callback style
 UserSchema.methods.validatePassword = function (candidatePassword) {
-  return new Promise((resolve, reject) => {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-      if (err) return reject(err);
-      resolve(isMatch);
+    return new Promise((resolve, reject) => {
+        bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+            if (err) return reject(err);
+            resolve(isMatch);
+        });
     });
-  });
 };
 
 const User = mongoose.model('User', UserSchema);

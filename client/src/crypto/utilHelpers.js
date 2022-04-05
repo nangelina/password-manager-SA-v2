@@ -1,4 +1,6 @@
 import { Buffer } from 'buffer';
+import ByteData from './ByteData';
+import Cipher from './Cipher';
 
 export function fromUtf8(str) {
     const strUtf8 = encodeURIComponent(str);
@@ -32,4 +34,12 @@ export function fromB64 (b64) {
         bufView[i] = binary.charCodeAt(i);
     }
     return buf;
+}
+
+export function stringToCipher (string) {
+    const [encType, ivB64, ctB64, macB64] = string.split(/[|.]+/);
+    const iv = new ByteData(fromB64(ivB64));
+    const ct = new ByteData(fromB64(ctB64));
+    const mac = macB64 ? new ByteData(fromB64(macB64)) : null;
+    return new Cipher(parseInt(encType), iv, ct, mac);
 }

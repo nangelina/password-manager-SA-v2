@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 
 function AuthForm ({ isRegister }) {
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const { setUser, setStretchedMasterKey } = useContext(UserContext);
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
@@ -48,25 +48,17 @@ function AuthForm ({ isRegister }) {
 
     const masterKey = await generateMasterKey(username, password);
     const masterPasswordHash = await generateMasterKeyHash(masterKey);
+    const stretchedMasterKey = await stretchMasterKey(masterKey);
 
     if (isRegister) {
-      const stretchedMasterKey = await stretchMasterKey(masterKey);
       const unencryptedSymKey = generateSymKey();
       const encryptedSymKey = await encryptSymKey(unencryptedSymKey, stretchedMasterKey);
-
-      // console.log('encryptedSymKey', encryptedSymKey);
-      // const jsonstring = encryptedSymKey.string;
-      // const jsonparse = jsonToSymKeyCipher(jsonstring);
-      // console.log('jsonparse', jsonparse);
-      // const decryptedSymKey = await decryptSymKey(jsonparse, stretchedMasterKey);
-      // console.log('original sym key:', unencryptedSymKey, '\nfrom json and back:', decryptedSymKey);
-      // console.log('same?', unencryptedSymKey === decryptedSymKey, unencryptedSymKey == decryptedSymKey);
 
       axios
         .post('/api/users', {
           username,
           password: masterPasswordHash.b64,
-          // symKey: encryptedSymKey.string
+          symKey: encryptedSymKey.string
         })
         .then((user) => {
           // if the response is successful, make them log in
@@ -84,6 +76,7 @@ function AuthForm ({ isRegister }) {
         .then((user) => {
           // if the response is successful, update the current user and redirect to the home page
           setUser(user.data);
+          setStretchedMasterKey(stretchedMasterKey)
           navigate('/');
         })
         .catch((err) => {

@@ -41,6 +41,9 @@ function PasswordItem ({ label, onChange, isError, onBlur }) {
                 onClick={handleClickShowPassword}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
+                style={{
+                  tabIndex: -1
+                }}
               >
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>

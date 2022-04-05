@@ -4,14 +4,15 @@ const router = express.Router();
 const db = require('../models');
 const mustBeLoggedIn = require('../middleware/mustBeLoggedIn');
 
-function getCurrentUser(req, res) {
+function getCurrentUser (req, res) {
     // I'm picking only the specific fields its OK for the audience to see publicly
     // never send the whole user object in the response, and only show things it's OK
     // for others to read (like ID, name, email address, etc.)
-    const { id, username } = req.user;
+    const { id, username, symKey } = req.user;
     res.json({
         id,
         username,
+        symKey
     });
 }
 
@@ -78,7 +79,25 @@ router
 // to demonstrate that we can ensure a user must be logged in to use a route
 router.route('/stuff').get(mustBeLoggedIn(), (req, res) => {
     // at this point we can assume the user is logged in. if not, the mustBeLoggedIn middleware would have caught it
-    res.json(['Bears', 'Beets', 'Battlestar Galactica']);
+    db.User.findOne({ username: req.user.username }, { _id: 0, vault: 1 })
+        .clone()
+        .then((user) => {
+            res.json(user);
+        });
 });
+
+router
+    .route('/vault')
+    // POST to /api/vault will update vault
+    .post(mustBeLoggedIn(), (req, res, next) => {
+        db.User.updateOne({ username: req.user.username }, { vault: req.body.encryptedVault })
+            .clone()
+            .then(() => {
+                res.status(200).json({});
+            })
+            .catch((err) => {
+                next(err);
+            });
+    });
 
 module.exports = router;

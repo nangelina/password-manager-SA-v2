@@ -1,44 +1,57 @@
 import axios from 'axios';
 import React, { useEffect, useState, useContext } from 'react';
+
+import { UserContext } from '../services/userContext';
+import AddPasswordPopup from '../components/AddPasswordPopup'
+
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import { UserContext } from '../services/userContext';
+import Button from '@mui/material/Button';
 
 function HomePage () {
-  const { user } = useContext(UserContext);
-  const [stuff, setStuff] = useState(null);
+  const { user, setUser, vault } = useContext(UserContext);
 
-  useEffect(() => {
+  async function getVault () {
     // only try loading stuff if the user is logged in.
     if (!user) {
       return;
     }
 
-    axios
+    return axios
       .get('/api/stuff')
       .then((res) => {
-        setStuff(res.data);
+        setUser({ ...user, ...res.data });
       })
       .catch((err) => {
-        // if we got an error, we'll just log it and set stuff to an empty array
-        console.log(err);
-        setStuff([]);
+        console.error(err);
       });
-  }, []);
+  }
+
+  useEffect(getVault, []);
 
   return (
     <div>
-      {user && stuff && (
+      {JSON.stringify(user)}
+      {user && (
         <div>
-          Welcome back, {user.username}!
-          <List>
-            {stuff.map((s, i) => (
-              <ListItem key={i}>{s}</ListItem>
-            ))}
-          </List>
+          {vault ? (
+            <div>
+              Welcome back, {user.username}!
+              <List>
+                {/* {vault.map((s, i) => (
+                  <ListItem key={i}>{s}</ListItem>
+                ))} */}
+                {JSON.stringify(vault)}
+              </List>
+            </div>
+          )
+            : (<div>Hold on, looking for your stuff...</div>)
+          }
+          <Button onClick={getVault}>Refresh</Button>
+          <AddPasswordPopup />
         </div>
-      )}
-      {user && !stuff && <div>Hold on, looking for your stuff...</div>}
+      )
+      }
       {!user && (
         <div>
           Hey! I don't recognize you! Register and log in using the

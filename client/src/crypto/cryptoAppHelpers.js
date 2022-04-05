@@ -6,7 +6,7 @@
  * In addition, a 512-bit Symmetric Key and an Initialization Vector is generated using a Cryptographically Secure Pseudorandom Number Generator (CSPRNG). The Symmetric key is encrypted with AES-256 bit encryption using the Stretched Master Key and the Initialization Vector. The resulting key is called the Protected Symmetric Key. The Protected Symmetric Key is the main key associated with the user and sent to the server upon account creation, and sent back to the Bitwarden Client apps upon syncing.
  */
 
-import { fromUtf8, fromB64 } from './utilHelpers.js';
+import { fromUtf8, toUtf8 } from './utilHelpers.js';
 import ByteData from './ByteData.js';
 import {
     aesEncrypt,
@@ -66,21 +66,13 @@ export async function encryptSymKey (symKey, stretchedMasterKey) {
     );
 }
 
-export function jsonToSymKeyCipher (string) {
-    const [encType, ivB64, ctB64, macB64] = string.split(/[|.]+/);
-    const iv = new ByteData(fromB64(ivB64));
-    const ct = new ByteData(fromB64(ctB64));
-    const mac = new ByteData(fromB64(macB64));
-    return new Cipher(parseInt(encType), iv, ct, mac);
-}
-
 export async function decryptSymKey (encryptedSymKey, stretchedMasterKey) {
     if (
         !stretchedMasterKey ||
         !stretchedMasterKey.encKey ||
         !stretchedMasterKey.macKey
     ) {
-        return new ByteData();
+        return new SymmetricCryptoKey();
     }
 
     const decryptedSymKey = await aesDecrypt(
@@ -88,7 +80,7 @@ export async function decryptSymKey (encryptedSymKey, stretchedMasterKey) {
         stretchedMasterKey.encKey,
         stretchedMasterKey.macKey
     );
-    return new ByteData(decryptedSymKey);
+    return new SymmetricCryptoKey(decryptedSymKey);
 }
 
 export async function decryptSecret (encryptedSecret, symKey) {
@@ -98,6 +90,7 @@ export async function decryptSecret (encryptedSecret, symKey) {
         symKey.encKey,
         symKey.macKey
     );
+    console.log('aesDecrypt result', decryptedSecret);
     return toUtf8(decryptedSecret);
 }
 
