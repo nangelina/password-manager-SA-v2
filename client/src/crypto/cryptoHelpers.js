@@ -39,7 +39,7 @@ export async function pbkdf2(password, salt, iterations, length) {
         const exportedKey = await crypto.subtle.exportKey('raw', derivedKey);
         return new ByteData(exportedKey);
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
 }
 

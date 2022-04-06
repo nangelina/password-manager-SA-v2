@@ -99,7 +99,7 @@ function AuthForm ({ isRegister }) {
           <CardContent>
             {!isRegister && (
               <Typography gutterBottom variant="h5">
-                Don't have an account yet?{' '}
+                Don&apos;t have an account yet?{' '}
                 {<Link to="/register">Register</Link>} one
                 first!
               </Typography>

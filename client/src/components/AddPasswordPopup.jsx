@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import HostedListingForm from './hosted-listings/HostedListingForm';
+import LoginItemForm from './LoginItemForm';
 import { UserContext } from '../services/userContext';
 
 import Button from '@mui/material/Button';
@@ -52,7 +52,7 @@ export default function FormDialog () {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add New Login Item</DialogTitle>
         <DialogContent>
-          <HostedListingForm
+          <LoginItemForm
             url={url}
             username={username}
             password={password}

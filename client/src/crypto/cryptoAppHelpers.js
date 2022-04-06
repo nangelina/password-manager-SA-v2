@@ -90,7 +90,6 @@ export async function decryptSecret (encryptedSecret, symKey) {
         symKey.encKey,
         symKey.macKey
     );
-    console.log('aesDecrypt result', decryptedSecret);
     return toUtf8(decryptedSecret);
 }
 

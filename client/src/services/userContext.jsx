@@ -1,7 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { decryptSymKey, encryptSecret, decryptSecret } from '../crypto/cryptoAppHelpers';
-import Cipher from '../crypto/Cipher';
+import {
+  decryptSymKey,
+  encryptSecret,
+  decryptSecret,
+} from '../crypto/cryptoAppHelpers';
 import { stringToCipher } from '../crypto/utilHelpers';
 import SymmetricCryptoKey from '../crypto/SymmetricCryptoKey';
 
@@ -9,28 +12,26 @@ export const UserContext = createContext();
 
 function UserProvider ({ children }) {
   const [user, setUser] = useState(null);
-  const [stretchedMasterKey, setStretchedMasterKey] = useState(new SymmetricCryptoKey());
-  const [symKey, setSymKey] = useState(new Cipher());
+  const [stretchedMasterKey, setStretchedMasterKey] = useState(
+    new SymmetricCryptoKey()
+  );
+  const [symKey, setSymKey] = useState(new SymmetricCryptoKey());
   const [vault, setVault] = useState([]);
 
   async function decryptSymKeyFromString () {
     const cipher = stringToCipher(user.symKey);
-    console.log('decryptSymKeyFromString:', 'cipher', cipher, 'stretchedMasterKey', stretchedMasterKey);
     const decryptedSymKey = await decryptSymKey(cipher, stretchedMasterKey);
     setSymKey(decryptedSymKey);
+    setUser((prevState) => ({ ...prevState, symKey: undefined }));
   }
 
   async function decryptVaultFromString () {
-    console.log('user.vault', user.vault);
     const cipher = stringToCipher(user.vault);
-    console.log('user.vault === cipher?', user.vault === cipher.string);
-    console.log('decryptVaultFromString:', 'cipher', cipher, 'symKey', symKey);
     const decryptedVault = await decryptSecret(cipher, symKey);
-    console.log('decryptedVaultSecret', decryptedVault);
     try {
       const parsed = JSON.parse(decryptedVault);
       setVault(parsed);
-      setUser({ ...user, vault: undefined });
+      setUser((prevState) => ({ ...prevState, vault: undefined }));
     } catch (error) {
       console.error(error);
     }
@@ -38,50 +39,56 @@ function UserProvider ({ children }) {
 
   useEffect(() => {
     if (user) {
-      if (user.symKey && stretchedMasterKey) {
+      if (
+        symKey.key &&
+        !symKey.key.b64 &&
+        user.symKey &&
+        stretchedMasterKey.key &&
+        stretchedMasterKey.key.b64
+      ) {
         decryptSymKeyFromString();
       }
-      if (user.vault && symKey) {
+      if (user.vault && symKey.key && symKey.key.b64) {
         decryptVaultFromString();
       }
     }
-  }, [user, stretchedMasterKey]);
+  }, [user, stretchedMasterKey, symKey]);
 
   function addVaultItem (item) {
     if (!item.url || !item.username || !item.password)
       throw new Error('Please fill all required fields');
-    setVault([...vault, item]);
+    setVault(prevState => [...prevState, item]);
   }
 
   useEffect(() => {
     async function updateServerVault () {
-      if (!vault) return;
+      if (!vault || !symKey.string) return;
 
       const secret = JSON.stringify(vault);
       const encryptedSecret = await encryptSecret(secret, symKey);
 
-      // console.log('am here', 'encryptedSecret', encryptedSecret);
-      // const cipher = stringToCipher(encryptedSecret.string);
-
-      // console.log('encryptedSecret', encryptedSecret, 'vs cipher', cipher, 'symKey', symKey);
-      // const decryptedVault = await decryptSecret(cipher, symKey);
-      // console.log('decryptedVault', decryptedVault);
-      // console.log('parse', JSON.parse(decryptedVault));
-
       axios
         .post('/api/vault', {
-          encryptedVault: encryptedSecret.string
+          encryptedVault: encryptedSecret.string,
         })
         .catch((err) => {
           alert("Error: Couldn't save vault: " + err);
         });
     }
     updateServerVault();
-  }, [vault, symKey])
+  }, [vault]);
 
   return (
     <div>
-      <UserContext.Provider value={{ user, setUser, vault, addVaultItem, setStretchedMasterKey }}>
+      <UserContext.Provider
+        value={{
+          user,
+          setUser,
+          vault,
+          addVaultItem,
+          setStretchedMasterKey,
+        }}
+      >
         {children}
       </UserContext.Provider>
     </div>

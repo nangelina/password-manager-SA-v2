@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import FormItem from './FormItem.jsx';
 import PasswordItem from './PasswordItem.jsx';
 
-function HostedListingForm ({
+function LoginItemForm ({
   url,
   username,
   password,
@@ -48,4 +48,4 @@ function HostedListingForm ({
   );
 }
 
-export default HostedListingForm;
+export default LoginItemForm;

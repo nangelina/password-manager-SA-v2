@@ -357,7 +357,7 @@ function Crypto () {
         </div>
       </form>
 
-      <h2 style={styles.h2}>The "Cipher String"</h2>
+      <h2 style={styles.h2}>{'The "Cipher String"'}</h2>
       <pre style={styles.pre}>{encryptedSecret.string}</pre>
 
       <h2 style={styles.h2}>Decrypt</h2>

@@ -30,7 +30,7 @@ function LoggedInMenu ({ username, ...otherProps }) {
         setUser(null);
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         handleClose();
       });
   };

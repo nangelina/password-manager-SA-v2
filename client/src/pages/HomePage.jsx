@@ -1,12 +1,15 @@
 import axios from 'axios';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 
 import { UserContext } from '../services/userContext';
-import AddPasswordPopup from '../components/AddPasswordPopup'
+import AddPasswordPopup from '../components/AddPasswordPopup';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function HomePage () {
   const { user, setUser, vault } = useContext(UserContext);
@@ -20,7 +23,7 @@ function HomePage () {
     return axios
       .get('/api/stuff')
       .then((res) => {
-        setUser({ ...user, ...res.data });
+        setUser((prevState) => ({ ...prevState, ...res.data }));
       })
       .catch((err) => {
         console.error(err);
@@ -31,30 +34,43 @@ function HomePage () {
 
   return (
     <div>
-      {JSON.stringify(user)}
+      {JSON.stringify(user, null, 2)}
       {user && (
         <div>
           {vault ? (
             <div>
               Welcome back, {user.username}!
               <List>
-                {/* {vault.map((s, i) => (
-                  <ListItem key={i}>{s}</ListItem>
-                ))} */}
-                {JSON.stringify(vault)}
+                {vault.map((loginDetails, i) => (
+                  <ListItem
+                    key={i}
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemText
+                      primary={loginDetails.url}
+                      secondary={loginDetails.username}
+                    />
+                  </ListItem>
+                ))}
               </List>
             </div>
-          )
-            : (<div>Hold on, looking for your stuff...</div>)
-          }
+          ) : (
+            <div>Hold on, looking for your stuff...</div>
+          )}
           <Button onClick={getVault}>Refresh</Button>
           <AddPasswordPopup />
         </div>
-      )
-      }
+      )}
       {!user && (
         <div>
-          Hey! I don't recognize you! Register and log in using the
+          Hey! I don&apos;t recognize you! Register and log in using the
           link above
         </div>
       )}
