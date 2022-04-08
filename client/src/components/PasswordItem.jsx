@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
+
+import checkPasswordPwnedCount from '../password/passwordChecker'
 
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Typography from '@mui/material/Typography';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-function PasswordItem ({ label, value, onChange, isError, onBlur, readOnly }) {
-  const [showPassword, setShowPassword] = React.useState(false);
+function PasswordItem ({ label, value = '', onChange, isError, onBlur, readOnly }) {
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -19,6 +22,33 @@ function PasswordItem ({ label, value, onChange, isError, onBlur, readOnly }) {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const [pwnCount, setPwnCount] = useState(0);
+
+  const getPwnCount = async (password) => {
+    checkPasswordPwnedCount(password).then((count) => {
+      setPwnCount(count);
+    });
+  };
+
+  const handleOnChange = async (event) => {
+    onChange(event);
+    getPwnCount(event.target.value);
+  };
+
+  React.useEffect(() => {
+    console.log('getPwnCount');
+    getPwnCount(value);
+  }, []);
+
+  const error = useMemo(() => isError || Boolean(pwnCount), [isError, pwnCount]);
+  const errorText = useMemo(() => {
+    if (!isError && pwnCount) {
+      return `Password found in ${pwnCount.toLocaleString()} breaches. It is recommended to change it.`;
+    } else {
+      return '';
+    }
+  }, [isError, pwnCount]);
 
   return (
     <div>
@@ -29,7 +59,7 @@ function PasswordItem ({ label, value, onChange, isError, onBlur, readOnly }) {
           placeholder={'Enter ' + label}
           value={value}
           disabled={readOnly}
-          onChange={onChange}
+          onChange={handleOnChange}
           onBlur={onBlur}
           endAdornment={
             <InputAdornment position="end">
@@ -44,10 +74,10 @@ function PasswordItem ({ label, value, onChange, isError, onBlur, readOnly }) {
             </InputAdornment>
           }
           label={label}
-          error={isError}
-          helperText={isError ? 'Passwords must match' : ''}
+          error={error}
         />
       </FormControl>
+      <Typography mt='0.5em' color='error'>{errorText}</Typography>
     </div>
   );
 }
