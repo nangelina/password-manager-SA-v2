@@ -33,14 +33,14 @@ function AuthForm ({ isRegister }) {
     setConfirmPassword(event.target.value);
   };
 
-  const validatePW = () => {
+  const validatePW = async () => {
     if (password !== '' && confirmPassword !== '') {
       if (password !== confirmPassword) {
         setError('Passwords must match.');
-      } else {
-        setError(false);
+        return
       }
     }
+    setError(false);
   };
 
   const handleSubmit = async (event) => {
@@ -90,15 +90,15 @@ function AuthForm ({ isRegister }) {
   };
 
   return (
-    <div className="App">
-      <Typography gutterBottom variant="h3" align="center">
+    <div>
+      <Typography gutterBottom variant="h3" align="center" mt='1em'>
         {isRegister ? 'Register' : 'Login'}
       </Typography>
       <Grid>
-        <Card className="form-container">
+        <Card >
           <CardContent>
             {!isRegister && (
-              <Typography gutterBottom variant="h5">
+              <Typography gutterBottom mb='1em' variant="h5">
                 Don&apos;t have an account yet?{' '}
                 {<Link to="/register">Register</Link>} one
                 first!

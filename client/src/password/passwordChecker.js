@@ -6,8 +6,6 @@ const HASH_PREFIX_LENGTH = 5;
 export default async function checkPasswordPwnedCount (password) {
     if (!password) return;
 
-    console.log('password', password);
-
     const hash = sha1(password).toUpperCase();
 
     const prefix = hash.substring(0, HASH_PREFIX_LENGTH);

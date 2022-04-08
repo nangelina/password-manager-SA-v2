@@ -50,11 +50,11 @@ export default function LoginItemPopup ({
     if (!url || !username || !password) {
       setError('Please fill all required fields');
     } else {
-      setVault((prevState) => ({
-        ...prevState,
-        [`${initUrl}.${initUsername}`]: undefined,
-        [`${url}.${username}`]: { url, username, password },
-      }));
+      setVault((prevState) => {
+        const newState = { ...prevState };
+        delete newState[`${initUrl}|${initUsername}`];
+        return { ...newState, [`${url}|${username}`]: { url, username, password } };
+      })
       handleExit();
     }
   };

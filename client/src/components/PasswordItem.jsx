@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import checkPasswordPwnedCount from '../password/passwordChecker'
+
+import PasswordStrengthBar from 'react-password-strength-bar';
 
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -36,10 +38,9 @@ function PasswordItem ({ label, value = '', onChange, isError, onBlur, readOnly 
     getPwnCount(event.target.value);
   };
 
-  React.useEffect(() => {
-    console.log('getPwnCount');
+  useEffect(() => {
     getPwnCount(value);
-  }, []);
+  }, [])
 
   const error = useMemo(() => isError || Boolean(pwnCount), [isError, pwnCount]);
   const errorText = useMemo(() => {
@@ -77,6 +78,7 @@ function PasswordItem ({ label, value = '', onChange, isError, onBlur, readOnly 
           error={error}
         />
       </FormControl>
+      {value && <PasswordStrengthBar password={value} style={{ marginTop: '0.75em' }} />}
       <Typography mt='0.5em' color='error'>{errorText}</Typography>
     </div>
   );
