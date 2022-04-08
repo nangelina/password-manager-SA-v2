@@ -17,7 +17,7 @@ function Navbar () {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
-            PassportJS Example
+            Password Manager
           </Typography>
           {user
             ? <LoggedInMenu username={user.username} />

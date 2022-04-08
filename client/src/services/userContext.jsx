@@ -54,12 +54,6 @@ function UserProvider ({ children }) {
     }
   }, [user, stretchedMasterKey, symKey]);
 
-  function addVaultItem (item) {
-    if (!item.url || !item.username || !item.password)
-      throw new Error('Please fill all required fields');
-    setVault(prevState => [...prevState, item]);
-  }
-
   useEffect(() => {
     async function updateServerVault () {
       if (!vault || !symKey.string) return;
@@ -85,7 +79,7 @@ function UserProvider ({ children }) {
           user,
           setUser,
           vault,
-          addVaultItem,
+          setVault,
           setStretchedMasterKey,
         }}
       >

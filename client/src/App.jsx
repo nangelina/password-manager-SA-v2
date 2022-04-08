@@ -62,7 +62,7 @@ function App () {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<CreateAccountPage />} />
-          <Route path="/cryptography-demo" element={<PrivateRoute><Crypto /></PrivateRoute>} />
+          <Route path="/cryptography-demo" element={<Crypto />} />
           <Route element={<NotFoundPage />} />
         </Routes>
       </ThemeProvider>

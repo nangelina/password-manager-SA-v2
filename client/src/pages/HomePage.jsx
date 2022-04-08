@@ -2,14 +2,10 @@ import axios from 'axios';
 import React, { useEffect, useContext } from 'react';
 
 import { UserContext } from '../services/userContext';
-import AddPasswordPopup from '../components/AddPasswordPopup';
+import AddPasswordPopup from '../components/AddLoginItemPopup';
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
+import LoginItemsList from '../components/LoginItemsList';
 
 function HomePage () {
   const { user, setUser, vault } = useContext(UserContext);
@@ -34,32 +30,12 @@ function HomePage () {
 
   return (
     <div>
-      {JSON.stringify(user, null, 2)}
       {user && (
         <div>
           {vault ? (
             <div>
               Welcome back, {user.username}!
-              <List>
-                {vault.map((loginDetails, i) => (
-                  <ListItem
-                    key={i}
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemText
-                      primary={loginDetails.url}
-                      secondary={loginDetails.username}
-                    />
-                  </ListItem>
-                ))}
-              </List>
+              <LoginItemsList />
             </div>
           ) : (
             <div>Hold on, looking for your stuff...</div>

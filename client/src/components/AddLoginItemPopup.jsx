@@ -8,8 +8,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function FormDialog () {
-  const { addVaultItem } = useContext(UserContext);
+export default function AddLoginItemPopup () {
+  const { setVault } = useContext(UserContext);
 
   const [open, setOpen] = useState(false);
 
@@ -19,6 +19,14 @@ export default function FormDialog () {
 
   const handleClose = () => {
     setOpen(false);
+    setError(null);
+  };
+
+  const handleExit = () => {
+    setUrl('');
+    setUsername('');
+    setPassword('');
+    handleClose();
   };
 
   const [url, setUrl] = useState('');
@@ -35,19 +43,20 @@ export default function FormDialog () {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
+
   const handleSubmit = () => {
-    try {
-      addVaultItem({ url, username, password });
-    } catch (error) {
-      setError(error);
+    if (!url || !username || !password) {
+      setError('Please fill all required fields');
+    } else {
+      setVault(prevState => [...prevState, { url, username, password }]);
+      handleExit();
     }
-    handleClose();
   };
 
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
+        Add New Login Item
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add New Login Item</DialogTitle>
@@ -61,10 +70,12 @@ export default function FormDialog () {
             handlePasswordChange={handlePasswordChange}
           />
         </DialogContent>
-        <DialogActions>
-          {error && (<span style={{ color: 'red' }}> {error} </span>)}
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSubmit}>Save</Button>
+        <DialogActions style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Button onClick={handleExit}>Cancel</Button>
+          <div>
+            {error && (<span style={{ color: 'red' }}> {error} </span>)}
+            <Button onClick={handleSubmit}>Save</Button>
+          </div>
         </DialogActions>
       </Dialog>
     </div>
