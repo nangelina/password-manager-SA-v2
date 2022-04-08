@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 
-function FormItem ({ label, type, value, onChange }) {
+function FormItem ({ label, type, value, onChange, readOnly }) {
   return (
     <TextField
       type={type}
@@ -10,6 +10,7 @@ function FormItem ({ label, type, value, onChange }) {
       value={value}
       placeholder={value ? '' : `Enter ${label}`}
       onChange={onChange}
+      disabled={readOnly}
       variant="outlined"
       fullWidth
       required

@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import FormItem from './FormItem.jsx';
 import PasswordItem from './PasswordItem.jsx';
 import { UserContext } from '../services/userContext';
-import { generateMasterKey, stretchMasterKey, generateMasterKeyHash, generateSymKey, encryptSymKey, decryptSymKey, jsonToSymKeyCipher } from '../crypto/cryptoAppHelpers';
+import { generateMasterKey, stretchMasterKey, generateMasterKeyHash, generateSymKey, encryptSymKey } from '../crypto/cryptoAppHelpers';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -47,7 +47,7 @@ function AuthForm ({ isRegister }) {
     event.preventDefault();
 
     const masterKey = await generateMasterKey(username, password);
-    const masterPasswordHash = await generateMasterKeyHash(masterKey);
+    const masterPasswordHash = await generateMasterKeyHash(masterKey, password);
     const stretchedMasterKey = await stretchMasterKey(masterKey);
 
     if (isRegister) {
@@ -81,7 +81,7 @@ function AuthForm ({ isRegister }) {
         })
         .catch((err) => {
           setError(
-            err.response.status === 401
+            err.response && err.response.status === 401
               ? 'Invalid username or password.'
               : err.message
           );
@@ -115,6 +115,7 @@ function AuthForm ({ isRegister }) {
                 <Grid item xs={12}>
                   <PasswordItem
                     label="Password"
+                    value={password}
                     onChange={handlePWChange}
                     onBlur={validatePW}
                     isError={Boolean(error)}
@@ -124,6 +125,7 @@ function AuthForm ({ isRegister }) {
                   <Grid item xs={12}>
                     <PasswordItem
                       label="Confirm Password"
+                      value={confirmPassword}
                       onChange={handleConfirmPWChange}
                       isError={Boolean(error)}
                       onBlur={validatePW}

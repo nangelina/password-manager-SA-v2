@@ -9,11 +9,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-function PasswordItem ({ label, onChange, isError, onBlur }) {
-  const camelCaseLabel = label.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
-    return index === 0 ? word.toLowerCase() : word.toUpperCase();
-  }).replace(/\s+/g, '');
-
+function PasswordItem ({ label, value, onChange, isError, onBlur, readOnly }) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => {
@@ -27,11 +23,13 @@ function PasswordItem ({ label, onChange, isError, onBlur }) {
   return (
     <div>
       <FormControl variant="outlined" fullWidth required>
-        <InputLabel htmlFor={camelCaseLabel}>{label}</InputLabel>
+        <InputLabel htmlFor={label}>{label}</InputLabel>
         <OutlinedInput
-          id={camelCaseLabel}
+          id={label}
           type={showPassword ? 'text' : 'password'}
           placeholder={'Enter ' + label}
+          value={value}
+          disabled={readOnly}
           onChange={onChange}
           onBlur={onBlur}
           endAdornment={
@@ -41,9 +39,6 @@ function PasswordItem ({ label, onChange, isError, onBlur }) {
                 onClick={handleClickShowPassword}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
-                style={{
-                  tabIndex: -1
-                }}
               >
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
@@ -60,8 +55,9 @@ function PasswordItem ({ label, onChange, isError, onBlur }) {
 
 PasswordItem.propTypes = {
   label: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  isError: PropTypes.bool.isRequired,
+  isError: PropTypes.bool,
   onBlur: PropTypes.func
 };
 

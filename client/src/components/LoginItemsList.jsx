@@ -1,11 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import LoginItemPopup from './LoginItemPopup';
 
 import { UserContext } from '../services/userContext';
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
 import LaunchIcon from '@mui/icons-material/Launch';
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
@@ -22,12 +24,36 @@ function LoginItemsList () {
     navigator.clipboard.writeText(text);
   }
 
+  // Login Item Details Popup
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
   return (
-    <List>
-      {Object.values(vault).map(({ url, username, password }, i) => (
-        <ListItem
-          key={i}
-          secondaryAction={
+    Object.keys(vault).length === 0
+      ? <Typography>
+        You don&apos;t have any logins yet. Add a new one using the button below.
+      </Typography>
+      :
+      <List>
+        {Object.values(vault).map(({ url, username, password }, i) => (
+          <ListItemButton key={i}>
+            <LoginItemPopup
+              open={open}
+              setOpen={setOpen}
+              initUrl={url}
+              initUsername={username}
+              initPassword={password}
+              readOnly
+            />
+            <ListItemText
+              primary={url}
+              secondary={username}
+              onClick={handleClickOpen}
+            />
             <div>
               <IconButton
                 aria-label="launch URL"
@@ -48,15 +74,9 @@ function LoginItemsList () {
                 <KeyIcon />
               </IconButton>
             </div>
-          }
-        >
-          <ListItemText
-            primary={url}
-            secondary={username}
-          />
-        </ListItem>
-      ))}
-    </List>
+          </ListItemButton>
+        ))}
+      </List>
   );
 }
 

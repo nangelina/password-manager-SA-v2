@@ -12,6 +12,7 @@ function LoginItemForm ({
   handleUrlChange,
   handleUsernameChange,
   handlePasswordChange,
+  readOnly
 }) {
   return (
     <div className="App">
@@ -21,9 +22,10 @@ function LoginItemForm ({
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <FormItem
-                  label="URL"
+                  label="Website URL"
                   value={url}
                   onChange={handleUrlChange}
+                  readOnly={readOnly}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -31,6 +33,7 @@ function LoginItemForm ({
                   label="Username"
                   value={username}
                   onChange={handleUsernameChange}
+                  readOnly={readOnly}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -38,6 +41,7 @@ function LoginItemForm ({
                   label="Password"
                   value={password}
                   onChange={handlePasswordChange}
+                  readOnly={readOnly}
                 />
               </Grid>
             </Grid>

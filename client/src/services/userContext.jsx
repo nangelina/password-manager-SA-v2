@@ -33,6 +33,11 @@ function UserProvider ({ children }) {
   }
 
   async function decryptVaultFromString () {
+    if (!(symKey.key && symKey.key.b64)) {
+      logOut();
+      return;
+    }
+
     const cipher = stringToCipher(user.vault);
     const decryptedVault = await decryptSecret(cipher, symKey);
     try {
@@ -60,7 +65,10 @@ function UserProvider ({ children }) {
 
   useEffect(() => {
     async function updateServerVault () {
-      if (!vault || !(symKey.key && symKey.key.b64)) return;
+      if (!(symKey.key && symKey.key.b64)) {
+        logOut();
+        return;
+      }
 
       const secret = JSON.stringify(vault);
       const encryptedSecret = await encryptSecret(secret, symKey);
@@ -73,7 +81,8 @@ function UserProvider ({ children }) {
           alert("Error: Couldn't save vault: " + err);
         });
     }
-    updateServerVault();
+
+    if (vault && Object.keys(vault).length > 0) updateServerVault();
   }, [vault]);
 
   return (

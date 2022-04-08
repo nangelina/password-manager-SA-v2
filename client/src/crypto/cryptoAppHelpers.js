@@ -32,7 +32,7 @@ export async function stretchMasterKey (masterKey) {
     return await stretchKey(masterKey.arr.buffer);
 }
 
-export async function generateMasterKeyHash (masterKey) {
+export async function generateMasterKeyHash (masterKey, password) {
     if (!masterKey || !masterKey.arr) return new ByteData();
 
     const passwordBuffer = fromUtf8(password);
