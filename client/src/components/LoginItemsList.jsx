@@ -26,57 +26,59 @@ function LoginItemsList () {
 
   // Login Item Details Popup
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(null);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleClickOpen = (data) => {
+    setOpen(data);
   };
 
   return (
     Object.keys(vault).length === 0
-      ? <Typography>
-        You don&apos;t have any logins yet. Add a new one using the button below.
+      ? <Typography m='1em'>
+        You don&apos;t have any logins yet. Add a new one using the + button above.
       </Typography>
       :
-      <List>
-        {Object.values(vault).map(({ url, username, password }, i) => (
-          <ListItemButton key={i}>
-            <LoginItemPopup
-              open={open}
-              setOpen={setOpen}
-              initUrl={url}
-              initUsername={username}
-              initPassword={password}
-              readOnly
-            />
-            <ListItemText
-              primary={url}
-              secondary={username}
-              onClick={handleClickOpen}
-            />
-            <div>
-              <IconButton
-                aria-label="launch URL"
-                onClick={() => launchURL(url)}
-              >
-                <LaunchIcon />
-              </IconButton>
-              <IconButton
-                aria-label="copy username"
-                onClick={() => copyToClipboard(username)}
-              >
-                <PersonIcon />
-              </IconButton>
-              <IconButton
-                aria-label="copy password"
-                onClick={() => copyToClipboard(password)}
-              >
-                <KeyIcon />
-              </IconButton>
-            </div>
-          </ListItemButton>
-        ))}
-      </List>
+      <div>
+        {Boolean(open) && <LoginItemPopup
+          open={Boolean(open)}
+          setOpen={setOpen}
+          initUrl={open.url}
+          initUsername={open.username}
+          initPassword={open.password}
+          readOnly
+        />}
+        <List>
+          {Object.values(vault).map(({ url, username, password }, i) => (
+            <ListItemButton key={i}>
+              <ListItemText
+                primary={url}
+                secondary={username}
+                onClick={() => handleClickOpen({ url, username, password })}
+              />
+              <div>
+                <IconButton
+                  aria-label="launch URL"
+                  onClick={() => launchURL(url)}
+                >
+                  <LaunchIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="copy username"
+                  onClick={() => copyToClipboard(username)}
+                >
+                  <PersonIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="copy password"
+                  onClick={() => copyToClipboard(password)}
+                >
+                  <KeyIcon />
+                </IconButton>
+              </div>
+            </ListItemButton>
+          ))}
+        </List>
+      </div>
   );
 }
 

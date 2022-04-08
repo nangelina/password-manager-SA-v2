@@ -14,7 +14,6 @@ export default function LoginItemPopup ({
   initUrl = '',
   initUsername = '',
   initPassword = '',
-  title,
   readOnly
 }) {
   const { setVault } = useContext(UserContext);
@@ -53,7 +52,8 @@ export default function LoginItemPopup ({
     } else {
       setVault((prevState) => ({
         ...prevState,
-        url: { url, username, password },
+        [`${initUrl}.${initUsername}`]: undefined,
+        [`${url}.${username}`]: { url, username, password },
       }));
       handleExit();
     }

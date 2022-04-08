@@ -25,7 +25,6 @@ function PasswordItem ({ label, value, onChange, isError, onBlur, readOnly }) {
       <FormControl variant="outlined" fullWidth required>
         <InputLabel htmlFor={label}>{label}</InputLabel>
         <OutlinedInput
-          id={label}
           type={showPassword ? 'text' : 'password'}
           placeholder={'Enter ' + label}
           value={value}

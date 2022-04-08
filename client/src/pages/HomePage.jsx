@@ -50,40 +50,43 @@ function HomePage () {
 
   return (
     <div>
-      {user && (
-        <div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            margin: '2em 1em 0',
-          }}
-          >
-            <Typography variant='h4'>
-              {`${user.username}'s Password Vault`}
-            </Typography>
-            <div>
-              <IconButton onClick={getVault} color='primary'>
-                <RefreshIcon />
-              </IconButton>
-              <IconButton onClick={handleClickOpen} color='primary'>
-                <AddIcon />
-              </IconButton>
+      {user
+        ? (
+          <div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              margin: '2em 1em 0',
+            }}
+            >
+              <Typography variant='h4'>
+                {`${user.username}'s Password Vault`}
+              </Typography>
+              <div>
+                <IconButton onClick={getVault} color='primary'>
+                  <RefreshIcon />
+                </IconButton>
+                <IconButton onClick={handleClickOpen} color='primary'>
+                  <AddIcon />
+                </IconButton>
+              </div>
             </div>
+            {user.vault
+              ? <Typography color='error' m='1em'>
+                An error occurred. Please log out and log back in.
+              </Typography>
+              : <LoginItemsList />
+            }
+            <LoginItemPopup open={open} setOpen={setOpen} />
           </div>
-          {user.vault
-            ? <Typography color='error'>An error occurred. Please log out and log back in.</Typography>
-            : <LoginItemsList />
-          }
-          <LoginItemPopup open={open} setOpen={setOpen} />
-        </div>
-      )}
-      {!user
-        && (<Typography>
-          {sessionExpired
-            ? 'Session expired due to inactivity. Please log back in.'
-            : 'Log in or register using the link above.'}
-        </Typography>
+        )
+        : (
+          <Typography m='1em'>
+            {sessionExpired
+              ? 'Session expired due to inactivity. Please log back in.'
+              : 'Log in or register using the link above.'}
+          </Typography>
         )}
     </div>
   );
