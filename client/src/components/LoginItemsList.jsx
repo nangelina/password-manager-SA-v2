@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import LaunchIcon from '@mui/icons-material/Launch';
 import PersonIcon from '@mui/icons-material/Person';
@@ -49,33 +50,41 @@ function LoginItemsList () {
         />}
         <List>
           {Object.values(vault).map(({ url, username, password }, i) => (
-            <ListItemButton key={i}>
-              <ListItemText
-                primary={url}
-                secondary={username}
-                onClick={() => handleClickOpen({ url, username, password })}
-              />
-              <div>
-                <IconButton
-                  aria-label="launch URL"
-                  onClick={() => launchURL(url)}
-                >
-                  <LaunchIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="copy username"
-                  onClick={() => copyToClipboard(username)}
-                >
-                  <PersonIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="copy password"
-                  onClick={() => copyToClipboard(password)}
-                >
-                  <KeyIcon />
-                </IconButton>
-              </div>
-            </ListItemButton>
+            <Tooltip key={i} title={`View Login Item - ${url}`} arrow>
+              <ListItemButton>
+                <ListItemText
+                  primary={url}
+                  secondary={username}
+                  onClick={() => handleClickOpen({ url, username, password })}
+                />
+                <div>
+                  <Tooltip title={`Launch URL - ${url}`}>
+                    <IconButton
+                      aria-label="launch URL"
+                      onClick={() => launchURL(url)}
+                    >
+                      <LaunchIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title='Copy Username to Clipboard'>
+                    <IconButton
+                      aria-label="copy username"
+                      onClick={() => copyToClipboard(username)}
+                    >
+                      <PersonIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title='Copy Password to Clipboard'>
+                    <IconButton
+                      aria-label="copy password"
+                      onClick={() => copyToClipboard(password)}
+                    >
+                      <KeyIcon />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </ListItemButton>
+            </Tooltip>
           ))}
         </List>
       </div>

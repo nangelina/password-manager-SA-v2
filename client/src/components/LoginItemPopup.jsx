@@ -69,10 +69,10 @@ export default function LoginItemPopup ({
       <DialogTitle>
         {view
           ? <div>
-            View Form Item
+            View Login Item
             <Button onClick={toggleReadOnly}>Edit</Button>
           </div>
-          : `${initUrl ? 'Edit' : 'Add New'} Form Item`
+          : `${initUrl ? 'Edit' : 'Add New'} Login Item`
         }
       </DialogTitle>
       <DialogContent>

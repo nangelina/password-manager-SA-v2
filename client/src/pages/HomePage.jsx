@@ -6,6 +6,7 @@ import LoginItemPopup from '../components/LoginItemPopup';
 import LoginItemsList from '../components/LoginItemsList';
 
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
@@ -64,12 +65,16 @@ function HomePage () {
                 {`${user.username}'s Password Vault`}
               </Typography>
               <div>
-                <IconButton onClick={getVault} color='primary'>
-                  <RefreshIcon />
-                </IconButton>
-                <IconButton onClick={handleClickOpen} color='primary'>
-                  <AddIcon />
-                </IconButton>
+                <Tooltip title='Refresh Vault Fetch from Server' arrow>
+                  <IconButton onClick={getVault} color='primary'>
+                    <RefreshIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title='Add New Login Item' arrow>
+                  <IconButton onClick={handleClickOpen} color='primary'>
+                    <AddIcon />
+                  </IconButton>
+                </Tooltip>
               </div>
             </div>
             {user.vault
