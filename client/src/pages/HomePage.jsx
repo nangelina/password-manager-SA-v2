@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 
 import { UserContext } from '../services/userContext';
 import AddPasswordPopup from '../components/AddLoginItemPopup';
@@ -8,7 +8,8 @@ import Button from '@mui/material/Button';
 import LoginItemsList from '../components/LoginItemsList';
 
 function HomePage () {
-  const { user, setUser, vault } = useContext(UserContext);
+  const { user, setUser, logOut, vault } = useContext(UserContext);
+  const [sessionExpired, setSessionExpired] = useState(false)
 
   async function getVault () {
     // only try loading stuff if the user is logged in.
@@ -19,10 +20,17 @@ function HomePage () {
     return axios
       .get('/api/stuff')
       .then((res) => {
+        console.log('got vault', res.data);
         setUser((prevState) => ({ ...prevState, ...res.data }));
+        setSessionExpired(false)
       })
       .catch((err) => {
-        console.error(err);
+        if (err.response.status === 403) {
+          logOut();
+          setSessionExpired(true);
+        } else {
+          console.error(err);
+        }
       });
   }
 
@@ -44,10 +52,10 @@ function HomePage () {
           <AddPasswordPopup />
         </div>
       )}
-      {!user && (
-        <div>
-          Hey! I don&apos;t recognize you! Register and log in using the
-          link above
+      {!user && (<div>
+        {sessionExpired
+          ? 'Session expired due to inactivity. Please log back in.'
+          : 'Log in or register using the link above.'}
         </div>
       )}
     </div>

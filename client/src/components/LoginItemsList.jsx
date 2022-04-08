@@ -24,7 +24,7 @@ function LoginItemsList () {
 
   return (
     <List>
-      {vault.map(({ url, username, password }, i) => (
+      {Object.values(vault).map(({ url, username, password }, i) => (
         <ListItem
           key={i}
           secondaryAction={

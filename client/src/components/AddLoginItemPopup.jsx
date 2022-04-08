@@ -48,7 +48,7 @@ export default function AddLoginItemPopup () {
     if (!url || !username || !password) {
       setError('Please fill all required fields');
     } else {
-      setVault(prevState => [...prevState, { url, username, password }]);
+      setVault(prevState => ({ ...prevState, url: { url, username, password } }));
       handleExit();
     }
   };

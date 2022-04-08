@@ -33,7 +33,7 @@ let theme = createTheme({
 theme = responsiveFontSizes(theme);
 
 function App () {
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, logOut } = useContext(UserContext);
 
   useEffect(() => {
     // this is going to double check that the user is still actually logged in
@@ -49,7 +49,7 @@ function App () {
       .catch((err) => {
         // if we get a 401 response, that means the user is no longer logged in
         if (err.response.status === 401) {
-          setUser(null);
+          logOut()
         }
       });
   }, []);

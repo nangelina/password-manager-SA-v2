@@ -11,7 +11,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function LoggedInMenu ({ username, ...otherProps }) {
   const navigate = useNavigate()
-  const { setUser } = useContext(UserContext);
+  const { logOut } = useContext(UserContext);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -26,8 +26,7 @@ function LoggedInMenu ({ username, ...otherProps }) {
     axios
       .delete('/api/auth')
       .then(() => {
-        // unsets the currently logged in user
-        setUser(null);
+        logOut()
       })
       .catch((err) => {
         console.error(err);

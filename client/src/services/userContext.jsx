@@ -16,13 +16,20 @@ function UserProvider ({ children }) {
     new SymmetricCryptoKey()
   );
   const [symKey, setSymKey] = useState(new SymmetricCryptoKey());
-  const [vault, setVault] = useState([]);
+  const [vault, setVault] = useState({});
+
+  function logOut () {
+    setUser(null);
+    setStretchedMasterKey(new SymmetricCryptoKey());
+    setSymKey(new SymmetricCryptoKey());
+    setVault({});
+  }
 
   async function decryptSymKeyFromString () {
     const cipher = stringToCipher(user.symKey);
     const decryptedSymKey = await decryptSymKey(cipher, stretchedMasterKey);
-    setSymKey(decryptedSymKey);
     setUser((prevState) => ({ ...prevState, symKey: undefined }));
+    setSymKey(decryptedSymKey);
   }
 
   async function decryptVaultFromString () {
@@ -30,8 +37,8 @@ function UserProvider ({ children }) {
     const decryptedVault = await decryptSecret(cipher, symKey);
     try {
       const parsed = JSON.parse(decryptedVault);
-      setVault(parsed);
       setUser((prevState) => ({ ...prevState, vault: undefined }));
+      setVault(parsed);
     } catch (error) {
       console.error(error);
     }
@@ -39,24 +46,21 @@ function UserProvider ({ children }) {
 
   useEffect(() => {
     if (user) {
-      if (
-        symKey.key &&
-        !symKey.key.b64 &&
-        user.symKey &&
-        stretchedMasterKey.key &&
-        stretchedMasterKey.key.b64
-      ) {
-        decryptSymKeyFromString();
-      }
-      if (user.vault && symKey.key && symKey.key.b64) {
-        decryptVaultFromString();
+      if (user.symKey) {
+        if (stretchedMasterKey.key && stretchedMasterKey.key.b64) {
+          decryptSymKeyFromString();
+        }
+      } else {
+        if (user.vault && symKey.key && symKey.key.b64) {
+          decryptVaultFromString();
+        }
       }
     }
   }, [user, stretchedMasterKey, symKey]);
 
   useEffect(() => {
     async function updateServerVault () {
-      if (!vault || !symKey.string) return;
+      if (!vault || !(symKey.key && symKey.key.b64)) return;
 
       const secret = JSON.stringify(vault);
       const encryptedSecret = await encryptSecret(secret, symKey);
@@ -78,6 +82,7 @@ function UserProvider ({ children }) {
         value={{
           user,
           setUser,
+          logOut,
           vault,
           setVault,
           setStretchedMasterKey,
