@@ -119,6 +119,7 @@ function AuthForm ({ isRegister }) {
                     onChange={handlePWChange}
                     onBlur={validatePW}
                     isError={Boolean(error)}
+                    isLogin={!isRegister}
                   />
                 </Grid>
                 {isRegister && (

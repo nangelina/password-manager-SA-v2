@@ -11,6 +11,7 @@ import CreateAccountPage from './pages/CreateAccountPage';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import Crypto from './pages/Crypto';
+import PasswordGeneration from './pages/PasswordGeneration';
 import NotFoundPage from './pages/NotFoundPage';
 
 import {
@@ -63,6 +64,7 @@ function App () {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<CreateAccountPage />} />
           <Route path="/cryptography-demo" element={<Crypto />} />
+          <Route path="/generate" element={<PasswordGeneration />} />
           <Route element={<NotFoundPage />} />
         </Routes>
       </ThemeProvider>
