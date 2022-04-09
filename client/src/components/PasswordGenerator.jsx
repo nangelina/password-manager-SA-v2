@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
+import generatePassword from '../password/passwordGenerator';
+
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Checkbox from '@mui/material/Checkbox';
@@ -8,25 +11,39 @@ import Input from '@mui/material/Input';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Slider from '@mui/material/Slider';
+import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import FormGroup from '@mui/material/FormGroup';
 
-export default function PasswordGenerator ({
-  radio,
-  setRadio,
-  length,
-  setLength,
-  uppercase,
-  setUppercase,
-  lowercase,
-  setLowercase,
-  numbers,
-  setNumbers,
-  symbols,
-  setSymbols,
-}) {
+export default function PasswordGenerator ({ showGenerate, onChange }) {
+  const [radio, setRadio] = useState('password');
+  const [length, setLength] = useState(14);
+  const [uppercase, setUppercase] = useState(true);
+  const [lowercase, setLowercase] = useState(true);
+  const [numbers, setNumbers] = useState(true);
+  const [symbols, setSymbols] = useState(false);
+
+  async function generate () {
+    if (showGenerate) {
+      const event = {
+        target: {
+          value: generatePassword(radio === 'passphrase', {
+            length,
+            numbers,
+            symbols,
+            lowercase,
+            uppercase,
+          }),
+        },
+      };
+      onChange(event);
+    }
+  }
+
+  useEffect(generate, [showGenerate, radio, length, symbols, uppercase, lowercase, numbers]);
+
   const handleRadioChange = (event) => {
     setRadio(event.target.value);
   };
@@ -48,10 +65,22 @@ export default function PasswordGenerator ({
   };
 
   return (
-    <Card sx={{ margin: '1em' }}>
+    <Card>
       <CardContent>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: '2em',
+            marginBottom: '1em',
+          }}
+        >
+          <Typography variant="h5">Generate Password</Typography>
+          <Button variant="outlined" onClick={generate}>Regenerate</Button>
+        </div>
         <FormControl>
-          <FormLabel focused={false}>Type</FormLabel>
+          {/* <FormLabel focused={false}>Type</FormLabel>
           <RadioGroup
             row
             aria-labelledby="password-type-label"
@@ -69,7 +98,7 @@ export default function PasswordGenerator ({
               control={<Radio />}
               label="Passphrase"
             />
-          </RadioGroup>
+          </RadioGroup> */}
           <FormLabel focused={false}>Length</FormLabel>
           <Grid container spacing={2} alignItems="center">
             <Grid item xs>

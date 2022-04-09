@@ -7,9 +7,13 @@ const passwordGen = require('generate-password-browser');
  * @param {List} options - {length, numbers, symbols, lowercase, uppercase, excludeSimilarCharacters} : All Booleans
  */
 export default function generatePassword (isPassphrase, options) {
-    // if (isPassphrase) {
-    //     return passphraseGen.generate(options);
-    // } else {
-    return passwordGen.generate({ ...options, excludeSimilarCharacters: true });
-    // }
+    try {
+        // if (isPassphrase) {
+        //     return passphraseGen.generate(options);
+        // } else {
+        return passwordGen.generate({ ...options, excludeSimilarCharacters: true });
+        // }
+    } catch (error) {
+        return '';
+    }
 }

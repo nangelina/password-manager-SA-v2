@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import checkPasswordPwnedCount from '../password/passwordChecker';
-import generatePassword from '../password/passwordGenerator';
 import PasswordGenerator from '../components/PasswordGenerator';
 
 import PasswordStrengthBar from 'react-password-strength-bar';
@@ -35,33 +34,10 @@ function PasswordItem ({
   };
 
   const [showGenerate, setShowGenerate] = useState(false);
-  const [radio, setRadio] = useState('password');
-  const [length, setLength] = useState(14);
-  const [uppercase, setUppercase] = useState(true);
-  const [lowercase, setLowercase] = useState(true);
-  const [numbers, setNumbers] = useState(true);
-  const [symbols, setSymbols] = useState(false);
 
   useEffect(() => {
     if (showGenerate) setShowPassword(true);
   }, [showGenerate]);
-
-  useEffect(() => {
-    if (showGenerate) {
-      const event = {
-        target: {
-          value: generatePassword(radio === 'passphrase', {
-            length,
-            numbers,
-            symbols,
-            lowercase,
-            uppercase,
-          }),
-        },
-      };
-      onChange(event);
-    }
-  }, [showGenerate, radio, length, symbols, uppercase, lowercase, numbers]);
 
   const [pwnCount, setPwnCount] = useState(0);
 
@@ -162,18 +138,8 @@ function PasswordItem ({
       </Typography>
       {showGenerate && (
         <PasswordGenerator
-          radio={radio}
-          setRadio={setRadio}
-          length={length}
-          setLength={setLength}
-          uppercase={uppercase}
-          setUppercase={setUppercase}
-          lowercase={lowercase}
-          setLowercase={setLowercase}
-          numbers={numbers}
-          setNumbers={setNumbers}
-          symbols={symbols}
-          setSymbols={setSymbols}
+          showGenerate={showGenerate}
+          onChange={onChange}
         />
       )}
     </div>

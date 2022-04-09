@@ -61,7 +61,7 @@ function Crypto () {
 
   const [symKey, setSymKey] = useState(new SymmetricCryptoKey());
   const [encryptedSymKey, setEncryptedSymKey] = useState(new Cipher());
-  const [decryptedSymKey, setDecryptedSymKey] = useState(new SymmetricCryptoKey());
+  const [decryptedSymKey, setDecryptedSymKey] = useState(new ByteData());
 
   const [publicKey, setPublicKey] = useState(new ByteData());
   const [privateKey, setPrivateKey] = useState(new ByteData());
@@ -319,7 +319,7 @@ function Crypto () {
         <h3 style={styles.h3}>Encrypted Symmetric Key</h3>
         <pre style={styles.pre}>{encryptedSymKey.string}</pre>
         <h3 style={styles.h3}>Decrypted Symmetric Key</h3>
-        <pre style={styles.pre}>{decryptedSymKey.key.b64}</pre>
+        <pre style={styles.pre}>{decryptedSymKey.b64}</pre>
       </section>
 
       <section style={styles.section}>
