@@ -59,10 +59,6 @@ function LoggedInMenu ({ username, ...otherProps }) {
           navigate('/');
           handleClose();
         }}>My Passwords</MenuItem>
-        <MenuItem onClick={() => {
-          navigate('/cryptography-demo');
-          handleClose();
-        }}>Cryptography Demo</MenuItem>
         <MenuItem onClick={handleLogOut}>Log Out</MenuItem>
       </Menu>
     </div>

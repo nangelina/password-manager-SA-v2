@@ -19,7 +19,7 @@ import FormGroup from '@mui/material/FormGroup';
 
 export default function PasswordGenerator ({ showGenerate, onChange, minLength, maxLength }) {
   const [radio, setRadio] = useState('password');
-  const [length, setLength] = useState(14);
+  const [length, setLength] = useState(20);
   const [uppercase, setUppercase] = useState(true);
   const [lowercase, setLowercase] = useState(true);
   const [numbers, setNumbers] = useState(true);
