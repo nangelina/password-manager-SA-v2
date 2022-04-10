@@ -17,7 +17,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import FormGroup from '@mui/material/FormGroup';
 
-export default function PasswordGenerator ({ showGenerate, onChange }) {
+export default function PasswordGenerator ({ showGenerate, onChange, minLength, maxLength }) {
   const [radio, setRadio] = useState('password');
   const [length, setLength] = useState(14);
   const [uppercase, setUppercase] = useState(true);
@@ -57,10 +57,10 @@ export default function PasswordGenerator ({ showGenerate, onChange }) {
   };
 
   const handleSliderInputBlur = () => {
-    if (length < 6) {
-      setLength(6);
-    } else if (length > 64) {
-      setLength(64);
+    if (length < minLength) {
+      setLength(minLength);
+    } else if (length > maxLength) {
+      setLength(maxLength);
     }
   };
 
@@ -104,8 +104,8 @@ export default function PasswordGenerator ({ showGenerate, onChange }) {
             <Grid item xs>
               <Slider
                 value={typeof length === 'number' ? length : 0}
-                min={6}
-                max={64}
+                min={minLength}
+                max={maxLength}
                 step={1}
                 onChange={handleSliderChange}
                 aria-labelledby="password-length-slider"
@@ -119,8 +119,8 @@ export default function PasswordGenerator ({ showGenerate, onChange }) {
                 onBlur={handleSliderInputBlur}
                 inputProps={{
                   step: 1,
-                  min: 6,
-                  max: 64,
+                  min: minLength,
+                  max: maxLength,
                   type: 'number',
                   'aria-labelledby': 'password-length-slider',
                 }}

@@ -18,6 +18,9 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+const MIN_LENGTH = 8;
+const MAX_LENGTH = 64
+
 function PasswordItem ({
   label,
   value = '',
@@ -131,6 +134,7 @@ function PasswordItem ({
         <PasswordStrengthBar
           password={value}
           style={{ marginTop: '0.75em' }}
+          minLength={MIN_LENGTH}
         />
       )}
       <Typography mt="0.5em" color="error">
@@ -140,6 +144,8 @@ function PasswordItem ({
         <PasswordGenerator
           showGenerate={showGenerate}
           onChange={onChange}
+          minLength={MIN_LENGTH}
+          maxLength={MAX_LENGTH}
         />
       )}
     </div>
