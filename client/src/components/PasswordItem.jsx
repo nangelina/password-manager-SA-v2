@@ -143,7 +143,7 @@ function PasswordItem ({
       {showGenerate && (
         <PasswordGenerator
           showGenerate={showGenerate}
-          onChange={onChange}
+          onChange={handleOnChange}
           minLength={MIN_LENGTH}
           maxLength={MAX_LENGTH}
         />
