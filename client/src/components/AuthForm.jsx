@@ -109,6 +109,7 @@ function AuthForm ({ isRegister }) {
                 <Grid item xs={12}>
                   <FormItem
                     label="Username"
+                    value={username}
                     onChange={handleUsernameChange}
                   />
                 </Grid>

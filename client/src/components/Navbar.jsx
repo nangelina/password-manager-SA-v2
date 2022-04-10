@@ -1,9 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import LoginButton from './LoginButton';
-import LoggedInMenu from './LoggedInMenu';
-import { UserContext } from '../services/userContext';
+import LogInOutButton from './LogInOutButton';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,7 +12,6 @@ import Button from '@mui/material/Button';
 
 function Navbar () {
   const navigate = useNavigate()
-  const { user } = useContext(UserContext);
 
   return (
     <AppBar position="sticky">
@@ -50,9 +47,7 @@ function Navbar () {
             </Button>
           </Box>
 
-          {user
-            ? <LoggedInMenu username={user.username} />
-            : <LoginButton />}
+          <LogInOutButton />
         </Toolbar>
       </Container>
     </AppBar>

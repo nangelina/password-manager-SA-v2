@@ -34,7 +34,7 @@ const blockStyle = {
   borderColor: (theme) =>
     theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
   borderRadius: 2,
-}
+};
 
 function Crypto () {
 
@@ -240,17 +240,17 @@ function Crypto () {
               <Grid item xs={12}>
                 <FormItem
                   label="Username"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Grid>
               <Grid item xs={12}>
                 <PasswordItem
                   label="Master Password"
-                value={masterPassword}
-                onChange={(e) =>
-                  setMasterPassword(e.target.value)}
-              />
+                  value={masterPassword}
+                  onChange={(e) =>
+                    setMasterPassword(e.target.value)}
+                />
               </Grid>
             </Grid>
           </CardContent>
