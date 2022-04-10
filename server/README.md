@@ -25,7 +25,7 @@ The home page hides sensitive data unless you're logged in. The navbar also chan
 
 - `/api/auth` is where we go to read, create, or delete our current login session. The create portion (`POST /api/auth`) uses the `passport.authenticate` middleware, which will read the user's credentials they posted and either log them in or return a 401 error. `GET /api/auth` simply returns the currently logged in user's info, if they are logged in. `DELETE /api/auth` will effectively log the user out.
 - `/api/users` has a POST route for creating a new user.
-- `/api/stuff` is just a test route that returns an array of strings if the user is logged in. if the user is not logged in, it will return a 403 Forbidden error.
+- `/api/vault` is just a test route that returns an array of strings if the user is logged in. if the user is not logged in, it will return a 403 Forbidden error.
 
 `routes/htmlRoutes.js` merely renders the index.html in client/build for any route (other than our API routes). This is to make the client-side react-router experience work correctly.
 

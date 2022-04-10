@@ -18,13 +18,13 @@ function HomePage () {
   const [sessionExpired, setSessionExpired] = useState(false);
 
   async function getVault () {
-    // only try loading stuff if the user is logged in.
+    // only try loading vault if the user is logged in.
     if (!user) {
       return;
     }
 
     return axios
-      .get('/api/stuff')
+      .get('/api/vault')
       .then((res) => {
         setUser((prevState) => ({ ...prevState, ...res.data }));
         setSessionExpired(false);

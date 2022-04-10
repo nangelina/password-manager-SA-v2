@@ -77,7 +77,7 @@ router
 
 // this route is just returns an array of strings if the user is logged in
 // to demonstrate that we can ensure a user must be logged in to use a route
-router.route('/stuff').get(mustBeLoggedIn(), (req, res) => {
+router.route('/vault').get(mustBeLoggedIn(), (req, res) => {
     // at this point we can assume the user is logged in. if not, the mustBeLoggedIn middleware would have caught it
     db.User.findOne({ username: req.user.username }, { _id: 0, vault: 1 })
         .clone()
