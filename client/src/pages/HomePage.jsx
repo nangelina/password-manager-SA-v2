@@ -90,7 +90,7 @@ function HomePage () {
           <Typography m='1em'>
             {sessionExpired
               ? 'Session expired due to inactivity. Please log back in.'
-              : 'Log in or register using the link above.'}
+              : 'Log in or register using the link above to see your passwords.'}
           </Typography>
         )}
     </div>

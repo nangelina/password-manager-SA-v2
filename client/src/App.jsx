@@ -5,7 +5,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
 
 import { UserContext } from './services/userContext';
-import PrivateRoute from './services/PrivateRoute'
 
 import CreateAccountPage from './pages/CreateAccountPage';
 import HomePage from './pages/HomePage';

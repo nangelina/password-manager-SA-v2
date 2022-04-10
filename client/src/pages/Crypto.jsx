@@ -11,42 +11,33 @@ import {
 } from '../crypto/cryptoHelpers';
 import { fromUtf8, toUtf8 } from '../crypto/utilHelpers';
 
-const styles = {
-  body: {
-    paddingBottom: '50px',
-  },
+import FormItem from '../components/FormItem';
+import PasswordItem from '../components/PasswordItem';
 
-  h1: {
-    borderBottom: '2px solid #ced4da',
-    marginBottom: '20px',
-    paddingBottom: '10px',
-    marginTop: '50px',
-  },
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
-  h2: {
-    fontSize: '24px',
-  },
-
-  h3: {
-    fontSize: '18px',
-  },
-
-  pre: {
-    padding: '9.5px',
-    lineHeight: '1.42857143',
-    wordBreak: 'breakAll',
-    wordWrap: 'breakWord',
-    backgroundColor: '#f5f5f5',
-    border: '1px solid #ced4da',
-    borderRadius: '4px',
-  },
-
-  section: {
-    marginBottom: '50px',
-  },
-};
+const blockStyle = {
+  overflow: 'auto',
+  my: 2,
+  p: 1,
+  bgcolor: (theme) =>
+    theme.palette.mode === 'dark' ? '#101010' : 'grey.100',
+  color: (theme) =>
+    theme.palette.mode === 'dark' ? 'grey.300' : 'grey.800',
+  border: '1px solid',
+  borderColor: (theme) =>
+    theme.palette.mode === 'dark' ? 'grey.800' : 'grey.300',
+  borderRadius: 2,
+}
 
 function Crypto () {
+
   // data
 
   const [email, setEmail] = useState('user@example.com');
@@ -63,14 +54,14 @@ function Crypto () {
   const [encryptedSymKey, setEncryptedSymKey] = useState(new Cipher());
   const [decryptedSymKey, setDecryptedSymKey] = useState(new ByteData());
 
-  const [publicKey, setPublicKey] = useState(new ByteData());
-  const [privateKey, setPrivateKey] = useState(new ByteData());
-  const [encryptedPrivateKey, setEncryptedPrivateKey] = useState(
-    new Cipher()
-  );
-  const [decryptedPrivateKey, setDecryptedPrivateKey] = useState(
-    new ByteData()
-  );
+  // const [publicKey, setPublicKey] = useState(new ByteData());
+  // const [privateKey, setPrivateKey] = useState(new ByteData());
+  // const [encryptedPrivateKey, setEncryptedPrivateKey] = useState(
+  //   new Cipher()
+  // );
+  // const [decryptedPrivateKey, setDecryptedPrivateKey] = useState(
+  //   new ByteData()
+  // );
 
   const [secret, setSecret] = useState('This is a secret.');
   const [encryptedSecret, setEncryptedSecret] = useState(new Cipher());
@@ -94,13 +85,14 @@ function Crypto () {
   // methods
 
   async function generateKeys () {
+    console.log('hello');
     const newSymKey = new Uint8Array(512 / 8);
     crypto.getRandomValues(newSymKey);
     setSymKey(new SymmetricCryptoKey(newSymKey));
 
-    const keyPair = await generateRsaKeyPair();
-    setPublicKey(keyPair.publicKey);
-    setPrivateKey(keyPair.privateKey);
+    // const keyPair = await generateRsaKeyPair();
+    // setPublicKey(keyPair.publicKey);
+    // setPrivateKey(keyPair.privateKey);
   }
 
   // watch
@@ -209,163 +201,168 @@ function Crypto () {
     encryptDecryptSymKey();
   }, [stretchedMasterKey, symKey]);
 
-  useEffect(() => {
-    async function encryptDecryptPrivateKey () {
-      if (!symKey || !symKey.key || !privateKey || !privateKey.arr) {
-        setEncryptedPrivateKey(new Cipher());
-        return;
-      }
+  // useEffect(() => {
+  //   async function encryptDecryptPrivateKey () {
+  //     if (!symKey || !symKey.key || !privateKey || !privateKey.arr) {
+  //       setEncryptedPrivateKey(new Cipher());
+  //       return;
+  //     }
 
-      const newEncryptedPrivateKey = await aesEncrypt(
-        privateKey.arr,
-        symKey.encKey,
-        symKey.macKey
-      );
-      const newDecryptedPrivateKey = await aesDecrypt(
-        newEncryptedPrivateKey,
-        symKey.encKey,
-        symKey.macKey
-      );
+  //     const newEncryptedPrivateKey = await aesEncrypt(
+  //       privateKey.arr,
+  //       symKey.encKey,
+  //       symKey.macKey
+  //     );
+  //     const newDecryptedPrivateKey = await aesDecrypt(
+  //       newEncryptedPrivateKey,
+  //       symKey.encKey,
+  //       symKey.macKey
+  //     );
 
-      setEncryptedPrivateKey(newEncryptedPrivateKey);
-      setDecryptedPrivateKey(new ByteData(newDecryptedPrivateKey));
-    }
-    encryptDecryptPrivateKey();
-  }, [symKey, privateKey]);
+  //     setEncryptedPrivateKey(newEncryptedPrivateKey);
+  //     setDecryptedPrivateKey(new ByteData(newDecryptedPrivateKey));
+  //   }
+  //   encryptDecryptPrivateKey();
+  // }, [symKey, privateKey]);
 
   useEffect(() => {
     generateKeys();
   }, []);
 
   return (
-    <div className="container" id="app">
-      <h1 style={styles.h1}>Key Derivation</h1>
+    <div className="container" id="app" style={{ margin: '0 1em 1em' }}>
+      <div style={{ position: 'sticky', top: '69px', backgroundColor: 'white', marginBottom: '1em', zIndex: 10 }}>
+        <Typography variant="h5" gutterBottom pt="1em">Key Derivation</Typography>
 
-      <form>
-        <div className="row">
-          <div className="col-sm-4">
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                className="form-control"
+        <Card >
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormItem
+                  label="Username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-            </div>
-          </div>
-          <div className="col-sm-4">
-            <div className="form-group">
-              <label htmlFor="masterPassword">
-                Master Password
-              </label>
-              <input
-                type="password"
-                id="masterPassword"
-                className="form-control"
+              </Grid>
+              <Grid item xs={12}>
+                <PasswordItem
+                  label="Master Password"
                 value={masterPassword}
                 onChange={(e) =>
-                  setMasterPassword(e.target.value)
-                }
+                  setMasterPassword(e.target.value)}
               />
-            </div>
-          </div>
-          <div className="col-sm-4">
-            <div className="form-group">
-              <label htmlFor="pbkdf2Iterations">
-                Client PBKDF2 Iterations
-              </label>
-              <input
-                type="number"
-                id="pbkdf2Iterations"
-                className="form-control"
-                value={pbkdf2Iterations}
-                onChange={(e) =>
-                  setPbkdf2Iterations(e.target.value)
-                }
-              />
-            </div>
-          </div>
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </div>
+
+      <section>
+        <Typography variant="h6" gutterBottom>Master Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {masterKey.b64}
+        </Box>
+      </section>
+
+      <section>
+        <Typography variant="h6" gutterBottom>Master Password Hash</Typography>
+        <Box component="div" sx={blockStyle}>
+          {masterKeyHash.b64}
+        </Box>
+      </section>
+
+      <section>
+        <Typography variant="h6" gutterBottom>Stretched Master Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {stretchedMasterKey.key.b64}
+        </Box>
+        <Typography variant="h7" gutterBottom>Encryption Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {stretchedMasterKey.encKey.b64}
+        </Box>
+        <Typography variant="h7" gutterBottom>MAC Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {stretchedMasterKey.macKey.b64}
+        </Box>
+      </section>
+
+      <section>
+
+        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Typography variant="h6" gutterBottom>Generated Symmetric Key</Typography>
+
+          <Button variant='contained' onClick={generateKeys} >
+            Regenerate Keys
+          </Button>
         </div>
-      </form>
-
-      <section style={styles.section}>
-        <h2 style={styles.h2}>Master Key</h2>
-        <pre style={styles.pre}>{masterKey.b64}</pre>
+        <Box component="div" sx={blockStyle}>
+          {symKey.key.b64}
+        </Box>
+        <Typography variant="h7" gutterBottom>Encryption Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {symKey.encKey.b64}
+        </Box>
+        <Typography variant="h7" gutterBottom>MAC Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {symKey.macKey.b64}
+        </Box>
+        <Typography variant="h7" gutterBottom>Encrypted Symmetric Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {encryptedSymKey.string}
+        </Box>
+        <Typography variant="h7" gutterBottom>Decrypted Symmetric Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {decryptedSymKey.b64}
+        </Box>
       </section>
 
-      <section style={styles.section}>
-        <h2 style={styles.h2}>Master Password Hash</h2>
-        <pre style={styles.pre}>{masterKeyHash.b64}</pre>
-      </section>
+      {/* <section>
+        <Typography variant="h6" gutterBottom>Generated RSA Key Pair</Typography>
+        <Typography variant="h7" gutterBottom>Public Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {publicKey.b64}
+        </Box>
+        <Typography variant="h7" gutterBottom>Private Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {privateKey.b64}
+        </Box>
+        <Typography variant="h7" gutterBottom>Encrypted Private Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {encryptedPrivateKey.string}
+        </Box>
+        <Typography variant="h7" gutterBottom>Decrypted Private Key</Typography>
+        <Box component="div" sx={blockStyle}>
+          {decryptedPrivateKey.b64}
+        </Box>
+      </section> */}
 
-      <section style={styles.section}>
-        <h2 style={styles.h2}>Stretched Master Key</h2>
-        <pre style={styles.pre}>{stretchedMasterKey.key.b64}</pre>
-        <h3 style={styles.h3}>Encryption Key</h3>
-        <pre style={styles.pre}>{stretchedMasterKey.encKey.b64}</pre>
-        <h3 style={styles.h3}>MAC Key</h3>
-        <pre style={styles.pre}>{stretchedMasterKey.macKey.b64}</pre>
-      </section>
+      <Typography variant="h5" gutterBottom>Encryption</Typography>
 
-      <section style={styles.section}>
-        <h2 style={styles.h2}>Generated Symmetric Key</h2>
-        <pre style={styles.pre}>{symKey.key.b64}</pre>
-        <h3 style={styles.h3}>Encryption Key</h3>
-        <pre style={styles.pre}>{symKey.encKey.b64}</pre>
-        <h3 style={styles.h3}>MAC Key</h3>
-        <pre style={styles.pre}>{symKey.macKey.b64}</pre>
-        <h3 style={styles.h3}>Encrypted Symmetric Key</h3>
-        <pre style={styles.pre}>{encryptedSymKey.string}</pre>
-        <h3 style={styles.h3}>Decrypted Symmetric Key</h3>
-        <pre style={styles.pre}>{decryptedSymKey.b64}</pre>
-      </section>
+      <TextField
+        label="Secret"
+        multiline
+        fullWidth
+        value={secret}
+        onChange={(e) => setSecret(e.target.value)}
+        style={{
+          margin: '1em 0'
+        }}
+        rows={4}
+      />
 
-      <section style={styles.section}>
-        <h2 style={styles.h2}>Generated RSA Key Pair</h2>
-        <h3 style={styles.h3}>Public Key</h3>
-        <pre style={styles.pre}>{publicKey.b64}</pre>
-        <h3 style={styles.h3}>Private Key</h3>
-        <pre style={styles.pre}>{privateKey.b64}</pre>
-        <h3 style={styles.h3}>Encrypted Private Key</h3>
-        <pre style={styles.pre}>{encryptedPrivateKey.string}</pre>
-        <h3 style={styles.h3}>Decrypted Private Key</h3>
-        <pre style={styles.pre}>{decryptedPrivateKey.b64}</pre>
-      </section>
+      <Typography variant="h6" gutterBottom>Encrypted Secret</Typography>
+      <Box component="div" sx={blockStyle}>
+        {encryptedSecret.string}
+      </Box>
 
-      <button
-        type="button"
-        id="deriveKeys"
-        className="btn btn-primary"
-        onClick={generateKeys}
-      >
-        <i className="fa fa-refresh"></i> Regenerate Keys
-      </button>
-
-      <h1 style={styles.h1}>Encryption</h1>
-
-      <form>
-        <div className="form-group">
-          <label htmlFor="secret">Secret Value</label>
-          <textarea
-            id="secret"
-            className="form-control"
-            value={secret}
-            onChange={(e) => setSecret(e.target.value)}
-          ></textarea>
-        </div>
-      </form>
-
-      <h2 style={styles.h2}>{'The "Cipher String"'}</h2>
-      <pre style={styles.pre}>{encryptedSecret.string}</pre>
-
-      <h2 style={styles.h2}>Decrypt</h2>
-      <textarea
-        className="form-control"
+      <Typography variant="h6" gutterBottom>Decrypted Secret</Typography>
+      <TextField
+        label=""
+        multiline
+        fullWidth
         value={decryptedSecret}
-        readOnly
-      ></textarea>
+        disabled
+      />
     </div>
   );
 }

@@ -17,7 +17,7 @@ function Navbar () {
   const { user } = useContext(UserContext);
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
