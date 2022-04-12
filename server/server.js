@@ -10,8 +10,8 @@ const PORT = process.env.PORT;
 const https = require('https');
 const fs = require('fs');
 const tlsConfig = {
-    key: fs.readFileSync('certs/localhost-key.pem'),
-    cert: fs.readFileSync('certs/localhost.pem'),
+    key: fs.readFileSync(process.env.SSL_KEY_FILE),
+    cert: fs.readFileSync(process.env.SSL_CRT_FILE),
 };
 
 const app = express();

@@ -54,14 +54,14 @@ function Crypto () {
   const [encryptedSymKey, setEncryptedSymKey] = useState(new Cipher());
   const [decryptedSymKey, setDecryptedSymKey] = useState(new ByteData());
 
-  // const [publicKey, setPublicKey] = useState(new ByteData());
-  // const [privateKey, setPrivateKey] = useState(new ByteData());
-  // const [encryptedPrivateKey, setEncryptedPrivateKey] = useState(
-  //   new Cipher()
-  // );
-  // const [decryptedPrivateKey, setDecryptedPrivateKey] = useState(
-  //   new ByteData()
-  // );
+  // // const [publicKey, setPublicKey] = useState(new ByteData());
+  // // const [privateKey, setPrivateKey] = useState(new ByteData());
+  // // const [encryptedPrivateKey, setEncryptedPrivateKey] = useState(
+  // //   new Cipher()
+  // // );
+  // // const [decryptedPrivateKey, setDecryptedPrivateKey] = useState(
+  // //   new ByteData()
+  // // );
 
   const [secret, setSecret] = useState('This is a secret.');
   const [encryptedSecret, setEncryptedSecret] = useState(new Cipher());
@@ -90,9 +90,9 @@ function Crypto () {
     crypto.getRandomValues(newSymKey);
     setSymKey(new SymmetricCryptoKey(newSymKey));
 
-    // const keyPair = await generateRsaKeyPair();
-    // setPublicKey(keyPair.publicKey);
-    // setPrivateKey(keyPair.privateKey);
+    // // const keyPair = await generateRsaKeyPair();
+    // // setPublicKey(keyPair.publicKey);
+    // // setPrivateKey(keyPair.privateKey);
   }
 
   // watch
@@ -201,29 +201,29 @@ function Crypto () {
     encryptDecryptSymKey();
   }, [stretchedMasterKey, symKey]);
 
-  // useEffect(() => {
-  //   async function encryptDecryptPrivateKey () {
-  //     if (!symKey || !symKey.key || !privateKey || !privateKey.arr) {
-  //       setEncryptedPrivateKey(new Cipher());
-  //       return;
-  //     }
+  // // useEffect(() => {
+  // //   async function encryptDecryptPrivateKey () {
+  // //     if (!symKey || !symKey.key || !privateKey || !privateKey.arr) {
+  // //       setEncryptedPrivateKey(new Cipher());
+  // //       return;
+  // //     }
 
-  //     const newEncryptedPrivateKey = await aesEncrypt(
-  //       privateKey.arr,
-  //       symKey.encKey,
-  //       symKey.macKey
-  //     );
-  //     const newDecryptedPrivateKey = await aesDecrypt(
-  //       newEncryptedPrivateKey,
-  //       symKey.encKey,
-  //       symKey.macKey
-  //     );
+  // //     const newEncryptedPrivateKey = await aesEncrypt(
+  // //       privateKey.arr,
+  // //       symKey.encKey,
+  // //       symKey.macKey
+  // //     );
+  // //     const newDecryptedPrivateKey = await aesDecrypt(
+  // //       newEncryptedPrivateKey,
+  // //       symKey.encKey,
+  // //       symKey.macKey
+  // //     );
 
-  //     setEncryptedPrivateKey(newEncryptedPrivateKey);
-  //     setDecryptedPrivateKey(new ByteData(newDecryptedPrivateKey));
-  //   }
-  //   encryptDecryptPrivateKey();
-  // }, [symKey, privateKey]);
+  // //     setEncryptedPrivateKey(newEncryptedPrivateKey);
+  // //     setDecryptedPrivateKey(new ByteData(newDecryptedPrivateKey));
+  // //   }
+  // //   encryptDecryptPrivateKey();
+  // // }, [symKey, privateKey]);
 
   useEffect(() => {
     generateKeys();

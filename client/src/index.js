@@ -6,7 +6,6 @@ import registerServiceWorker from './registerServiceWorker';
 import UserProvider from './services/userContext';
 import CssBaseline from '@mui/material/CssBaseline';
 
-// Now we can render our application into it
 render(
     <UserProvider>
         <CssBaseline />

@@ -12,6 +12,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
 
 function HomePage () {
+
   // Vault Login Items
 
   const { user, setUser, logOut, vault } = useContext(UserContext);

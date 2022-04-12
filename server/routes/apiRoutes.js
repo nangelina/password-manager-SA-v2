@@ -75,20 +75,17 @@ router
             });
     });
 
-// this route is just returns an array of strings if the user is logged in
-// to demonstrate that we can ensure a user must be logged in to use a route
-router.route('/vault').get(mustBeLoggedIn(), (req, res) => {
-    // at this point we can assume the user is logged in. if not, the mustBeLoggedIn middleware would have caught it
-    db.User.findOne({ username: req.user.username }, { _id: 0, vault: 1 })
-        .clone()
-        .then((user) => {
-            res.json(user);
-        });
-});
-
-router
-    .route('/vault')
-    // POST to /api/vault will update vault
+router.route('/vault')
+    // GET to /api/vault will return the user's encrypted vault
+    .get(mustBeLoggedIn(), (req, res) => {
+        // at this point we can assume the user is logged in. if not, the mustBeLoggedIn middleware would have caught it
+        db.User.findOne({ username: req.user.username }, { _id: 0, vault: 1 })
+            .clone()
+            .then((user) => {
+                res.json(user);
+            });
+    })
+    // POST to /api/vault will update the user's vault
     .post(mustBeLoggedIn(), (req, res, next) => {
         db.User.updateOne({ username: req.user.username }, { vault: req.body.encryptedVault })
             .clone()
