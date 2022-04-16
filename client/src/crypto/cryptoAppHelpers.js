@@ -1,9 +1,27 @@
 /**
  * User Account Creation
- * When the Create Account form is submitted, Bitwarden uses Password-Based Key Derivation Function 2 (PBKDF2) with 100,000 iteration rounds to stretch the user's Master Password with a salt of the user's email address. The resulting salted value is the 256 bit Master Key.
- * The Master Key is additionally stretched to 512 bits in length using HMAC-based Extract-and-Expand Key Derivation Function (HKDF).
- * The Master Key and Stretched Master Key are never stored on or transmitted to Bitwarden servers.
- * In addition, a 512-bit Symmetric Key and an Initialization Vector is generated using a Cryptographically Secure Pseudorandom Number Generator (CSPRNG). The Symmetric key is encrypted with AES-256 bit encryption using the Stretched Master Key and the Initialization Vector. The resulting key is called the Protected Symmetric Key. The Protected Symmetric Key is the main key associated with the user and sent to the server upon account creation, and sent back to the Bitwarden Client apps upon syncing.
+ *
+ * When the Create Account form is submitted, Password-Based Key Derivation
+ * Function 2 (PBKDF2) with 100,000 iteration rounds is used to stretch the
+ * user's Master Password with a salt of the user's email address. The resulting
+ * salted value is the 256 bit Master Key.
+ *
+ * The Master Key is additionally stretched to 512 bits in length using
+ * HMAC-based Extract-and-Expand Key Derivation Function (HKDF).
+ *
+ * The Master Key and Stretched Master Key are never stored on or transmitted to
+ * the server.
+ *
+ * In addition, a 512-bit Symmetric Key and an Initialization Vector is
+ * generated using a Cryptographically Secure Pseudorandom Number Generator
+ * (CSPRNG).
+ *
+ * The Symmetric key is encrypted with AES-256 bit encryption using the
+ * Stretched Master Key and the Initialization Vector. The resulting key is
+ * called the Encrypted Symmetric Key.
+ *
+ * The Encrypted Symmetric Key is the main key associated with the user and sent
+ * to the server upon account creation, and sent back to the client upon syncing.
  */
 
 import { fromUtf8, toUtf8 } from './utilHelpers.js';
